@@ -1,0 +1,196 @@
+<PrimitiveParameterMap>
+    <Primitive editorName="Box" className="Box" x3domName="Box" image="../static/images/box.jpg">
+        <Shape>
+            <Appearance>
+                <Material diffuseColor="#3F7EBD" specularColor="#2A2A2A" emissiveColor="#000000" transparency="0.0" shininess="0.2"></Material>
+            </Appearance>
+            <Box></Box>
+        </Shape>
+        <Parameter type="Vec" step="0.01" min="0" render="true" editorName="Size" x3domName="size">1.0,1.0,1.0</Parameter>
+        <!-- fake param, obviously doesn't exist -->
+        <Parameter type="Bool" editorName="Positive Element" x3domName="positive">true</Parameter>
+    </Primitive>
+    <Primitive editorName="Cone" className="Cone" x3domName="Cone" image="../static/images/cone.jpg">
+        <Shape>
+            <Appearance >
+                 <Material diffuseColor="#3F7EBD" specularColor="#2A2A2A" emissiveColor="#000000" transparency="0.0" shininess="0.2"></Material>
+            </Appearance>
+            <Cone></Cone>
+        </Shape>
+        <Parameter type="Float" editorName="Bottom Radius" min="0" x3domName="bottomRadius" step="0.01">0.5</Parameter>
+        <Parameter type="Float" editorName="Top Radius" min="0" x3domName="topRadius" step="0.01">0.0</Parameter>
+        <Parameter type="Float" editorName="Height" min="0" x3domName="height" step="0.01">1.0</Parameter>
+        <!-- fake param, obviously doesn't exist -->
+        <Parameter type="Bool" editorName="Positive Element" x3domName="positive">true</Parameter>
+    </Primitive>
+    <Primitive editorName="Cylinder" className="Cylinder" x3domName="Cylinder" image="../static/images/cylinder.jpg">
+        <Shape>
+            <Appearance >
+                 <Material diffuseColor="#3F7EBD" specularColor="#2A2A2A" emissiveColor="#000000" transparency="0.0" shininess="0.2"></Material>
+            </Appearance>
+            <Cylinder></Cylinder>
+        </Shape>
+        <Parameter type="Float" editorName="Radius" min="0" x3domName="radius" step="0.01">0.5</Parameter>
+        <Parameter type="Float" editorName="Height" min="0" x3domName="height" step="0.01">1.0</Parameter>
+        <!-- fake param, obviously doesn't exist -->
+        <Parameter type="Bool" editorName="Positive Element" x3domName="positive">true</Parameter>
+    </Primitive>
+    <Primitive editorName="Circular Torus" className="Torus" x3domName="Torus" image="../static/images/circulartorus.jpg">
+        <Shape>
+            <Appearance >
+                 <Material diffuseColor="#3F7EBD" specularColor="#2A2A2A" emissiveColor="#000000" transparency="0.0" shininess="0.2"></Material>
+            </Appearance>
+            <Torus></Torus>
+        </Shape>
+        <Parameter type="Float" editorName="RInside" min="0" x3domName="innerRadius" step="0.01">0.5</Parameter>
+        <Parameter type="Float" editorName="ROutside" min="0" x3domName="outerRadius" step="0.01">1.0</Parameter>
+        <Parameter type="Angle" min="0" max="360" editorName="Angle" x3domName="angle">90</Parameter>
+        <Parameter type="Bool" render="false" editorName="Inside/Outside-Radius" x3domName="insideOutsideRadius">true</Parameter>
+        <!-- fake param, obviously doesn't exist -->
+        <Parameter type="Bool" editorName="Positive Element" x3domName="positive">true</Parameter>
+    </Primitive>
+    <Primitive editorName="Rectangular Torus" className="RectangularTorus" x3domName="RectangularTorus" image="../static/images/rectangulartorus.jpg">
+        <Shape>
+            <Appearance >
+                 <Material diffuseColor="#3F7EBD" specularColor="#2A2A2A" emissiveColor="#000000" transparency="0.0" shininess="0.2"></Material>
+            </Appearance>
+            <RectangularTorus></RectangularTorus>
+        </Shape>
+        <Parameter type="Float" editorName="RInside" min="0" x3domName="innerRadius" step="0.01">0.5</Parameter>
+        <Parameter type="Float" editorName="ROutside" min="0" x3domName="outerRadius" step="0.01">1.0</Parameter>
+        <Parameter type="Angle" min="0" max="360" editorName="Angle" x3domName="angle">180</Parameter>
+        <Parameter type="Float" editorName="Height" min="0" x3domName="height" step="0.01">0.5</Parameter>
+        <Parameter type="Bool" editorName="Caps" x3domName="caps" render="false">true</Parameter>
+        <!-- fake param, obviously doesn't exist -->
+        <Parameter type="Bool" editorName="Positive Element" x3domName="positive">true</Parameter>
+    </Primitive>
+    <Primitive editorName="Dish" className="Dish" x3domName="Dish" image="../static/images/dish.jpg">
+        <Shape>
+            <Appearance >
+                 <Material diffuseColor="#3F7EBD" specularColor="#2A2A2A" emissiveColor="#000000" transparency="0.0" shininess="0.2"></Material>
+            </Appearance>
+            <Dish></Dish>
+        </Shape>
+        <Parameter type="Float" editorName="Diameter" min="0" x3domName="diameter" step="0.01">1.0</Parameter>
+        <Parameter type="Float" editorName="Radius" min="0" x3domName="radius" step="0.01">0.5</Parameter>
+        <Parameter type="Float" editorName="Height" min="0" x3domName="height" step="0.01">0.5</Parameter>
+        <!-- fake param, obviously doesn't exist -->
+        <Parameter type="Bool" editorName="Positive Element" x3domName="positive">true</Parameter>
+    </Primitive>
+    <Primitive editorName="Snout" className="Snout" x3domName="Snout" image="../static/images/snout.jpg">
+        <Shape>
+            <Appearance >
+                 <Material diffuseColor="#3F7EBD" specularColor="#2A2A2A" emissiveColor="#000000" transparency="0.0" shininess="0.2"></Material>
+            </Appearance>
+            <Snout></Snout>
+        </Shape>
+        <Parameter type="Float" editorName="DTop" min="0" x3domName="dtop" step="0.01">0.5</Parameter>
+        <Parameter type="Float" editorName="DBottom" min="0" x3domName="dbottom" step="0.01">1.0</Parameter>
+        <Parameter type="Float" editorName="XOff" min="0" x3domName="xoff" step="0.01">0.25</Parameter>
+        <Parameter type="Float" editorName="YOff" min="0" x3domName="yoff" step="0.01">0.25</Parameter>
+        <Parameter type="Float" editorName="Height" min="0" x3domName="height">1.0</Parameter>
+        <!-- fake param, obviously doesn't exist -->
+        <Parameter type="Bool" editorName="Positive Element" x3domName="positive">true</Parameter>
+    </Primitive>
+    <Primitive editorName="Pyramid" className="Pyramid" x3domName="Pyramid" image="../static/images/pyramid.jpg">
+        <Shape>
+            <Appearance >
+                 <Material diffuseColor="#3F7EBD" specularColor="#2A2A2A" emissiveColor="#000000" transparency="0.0" shininess="0.2"></Material>
+            </Appearance>
+            <Pyramid></Pyramid>
+        </Shape>
+        <Parameter type="Float" editorName="XBottom" min="0" x3domName="xbottom" step="0.01">1</Parameter>
+        <Parameter type="Float" editorName="YBottom" min="0" x3domName="ybottom" step="0.01">1</Parameter>
+        <Parameter type="Float" editorName="XTop" min="0" x3domName="xtop" step="0.01">0.5</Parameter>
+        <Parameter type="Float" editorName="YTop" min="0" x3domName="ytop" step="0.01">0.5</Parameter>
+        <Parameter type="Float" editorName="Height" min="0" x3domName="height" step="0.01">1.0</Parameter>
+        <Parameter type="Float" editorName="XOff" min="0" x3domName="xoff" step="0.01">0.25</Parameter>
+        <Parameter type="Float" editorName="YOff" min="0" x3domName="yoff" step="0.01">0.25</Parameter>
+        <!-- fake param, obviously doesn't exist -->
+        <Parameter type="Bool" editorName="Positive Element" x3domName="positive">true</Parameter>
+    </Primitive>
+    <Primitive editorName="Slope-Bottom Cylinder" className="SlopedCylinder" x3domName="SlopedCylinder" image="../static/images/slopebottomcylinder.jpg">
+        <Shape>
+            <Appearance >
+                 <Material diffuseColor="#3F7EBD" specularColor="#2A2A2A" emissiveColor="#000000" transparency="0.0" shininess="0.2"></Material>
+            </Appearance>
+            <SlopedCylinder></SlopedCylinder>
+        </Shape>
+        <Parameter type="Float" editorName="Radius" min="0" x3domName="radius" step="0.01">0.5</Parameter>
+        <Parameter type="Float" editorName="Height" min="0" x3domName="height" step="0.01">1.0</Parameter>
+        <Parameter type="Bool"  editorName="Show Top" x3domName="top" render="false">true</Parameter>
+        <Parameter type="Bool"  editorName="Show Bottom" x3domName="bottom" render="false">true</Parameter>
+        <Parameter type="Float" editorName="XTShear" min="0" x3domName="xtshear" step="0.0001">0.26179</Parameter>
+        <Parameter type="Float" editorName="YTShear" min="0" x3domName="ytshear" step="0.0001">0</Parameter>
+        <Parameter type="Float" editorName="XBShear" min="0" x3domName="xbshear" step="0.0001">0.26179</Parameter>
+        <Parameter type="Float" editorName="YBShear" min="0" x3domName="ybshear" step="0.0001">0</Parameter>
+        <!-- fake param, obviously doesn't exist -->
+        <Parameter type="Bool" editorName="Positive Element" x3domName="positive">true</Parameter>
+    </Primitive>
+    <Primitive editorName="Nozzle" className="Nozzle" x3domName="Nozzle" image="../static/images/nozzle.jpg">
+        <Shape>
+            <Appearance >
+                 <Material diffuseColor="#3F7EBD" specularColor="#2A2A2A" emissiveColor="#000000" transparency="0.0" shininess="0.2"></Material>
+            </Appearance>
+            <Nozzle></Nozzle>
+        </Shape>
+        <Parameter type="Float" editorName="Height" min="0" x3domName="height" step="0.01">1.0</Parameter>
+        <Parameter type="Float" editorName="RInside" min="0" x3domName="innerRadius" step="0.01">0.4</Parameter>
+        <Parameter type="Float" editorName="ROutside" min="0" x3domName="outerRadius" step="0.01">0.5</Parameter>
+        <Parameter type="Float" editorName="Nozzle Height" min="0" x3domName="nozzleHeight" step="0.01">0.1</Parameter>
+        <Parameter type="Float" editorName="Nozzle Radius" min="0" x3domName="nozzleRadius" step="0.01">0.6</Parameter>
+        <!-- fake param, obviously doesn't exist -->
+        <Parameter type="Bool" editorName="Positive Element" x3domName="positive">true</Parameter>
+    </Primitive>
+    <Primitive editorName="Extrusion" className="Extrusion"  x3domName="Extrusion" image="../static/images/extrusion.jpg" editorInput="true">
+        <Shape>
+            <Appearance >
+                <Material diffuseColor="#3F7EBD" specularColor="#2A2A2A" emissiveColor="#000000" transparency="0.0" shininess="0.2"></Material>
+            </Appearance>
+            <Extrusion solid="false"></Extrusion>
+        </Shape>
+        <Parameter type="Float" editorName="Height" min="0" x3domName="height" step="0.01">1.0</Parameter>
+        <!-- fake param, obviously doesn't exist -->
+        <Parameter type="Bool" editorName="Positive Element" x3domName="positive">true</Parameter>
+    </Primitive>
+    <Primitive editorName="Solid of Revolution" className="SolidOfRevolution" x3domName="SolidOfRevolution" image="../static/images/solidofrevolution.jpg" editorInput="true">
+        <Shape>
+            <Appearance >
+                <Material diffuseColor="#3F7EBD" specularColor="#2A2A2A" emissiveColor="#000000" transparency="0.0" shininess="0.2"></Material>
+            </Appearance>
+            <SolidOfRevolution solid="false"></SolidOfRevolution>
+        </Shape><Parameter type="Angle" editorName="Angle" min="0" max="360" x3domName="angle">90</Parameter>
+        <Parameter type="Angle" editorName="Crease Angle" min="0" max="360" x3domName="creaseAngle">0</Parameter>
+        <!-- fake param, obviously doesn't exist -->
+        <Parameter type="Bool" editorName="Positive Element" x3domName="positive">true</Parameter>
+    </Primitive>
+    <Primitive editorName="Origin" className="Origin" x3domName="IndexedLineSet"  image="../static/images/origin.jpg">
+        <Shape>
+            <Appearance>
+                <Material diffuseColor='#3F7EBD' specularColor="#2A2A2A" emmisiveColor="#000000" transparency="0.0" shininess="0.2" />
+            </Appearance>
+                <IndexedLineSet
+                    isPickable="true"
+                    coordIndex="0 1 -1, 2 3 -1, 4 5 -1" >
+                    <Coordinate point="1 0 0, 0 0 0, 0 1 0, 0 0 0, 0 0 1, 0 0 0"/>
+                    <Color color="1 0 0, 1 0 0, 0 0 1, 0 0 1, 0 1 0, 0 1 0"/>
+                    <LineProperties linewidthScaleFactor="2"></LineProperties>
+                </IndexedLineSet>
+        </Shape>
+    </Primitive>
+    <Primitive editorName="Reference Point" className="ReferencePoint" x3domName="IndexedLineSet" image="../static/images/refPoint.jpg">
+        <!--Shape>
+            <Appearance>
+                <Material diffuseColor='#3F7EBD' specularColor="#2A2A2A" emmisiveColor="#000000" transparency="0.0" shininess="0.2" />
+            </Appearance>
+            <IndexedLineSet
+                    isPickable="true"
+                    coordIndex="0 1 -1, 2 3 -1, 4 5 -1, 6 7 -1, 8 9 -1, 10 11 -1, 12 13 -1, 14 15 -1, 16 17 -1, 18 19 -1, 20 21 -1, 22 23 -1, 24 25 -1, 26 27 -1, 28 29 -1, 30 31 -1, 32 33 -1, 34 35 -1, 36 37 -1"
+                    colorIndex="0 1 -1, 2 3 -1, 4 5 -1, 6 7 -1, 8 9 -1, 10 11 -1, 12 13 -1, 14 15 -1, 16 17 -1, 18 19 -1, 20 21 -1, 22 23 -1, 24 25 -1, 26 27 -1, 28 29 -1, 30 31 -1, 32 33 -1, 34 35 -1, 36 37 -1">
+                <Coordinate point="-0.05 0.25 0, 0.05 0.25 0, 0 0.35 0, 0 0 0, 0.05 0.25 0, 0 0.35 0, -0.05 0.25 0, 0 0.35 0, 0.0 0.25 0.05, 0 0.35 0, 0.0 0.25 -0.05, 0 0.35 0, 0.0 0.25 -0.05, 0 0.25 0.05, -0.025 0 -0.025, 0.025 0 -0.025, 0.025 0 -0.025, 0.025 0 0.025, -0.025 0 -0.025, -0.025 0 0.025, -0.025 0 0.025, 0.025 0 0.025, -0.025 0.025 -0.025, 0.025 0.025 -0.025, 0.025 0.025 -0.025, 0.025 0.025 0.025, -0.025 0.025 -0.025, -0.025 0.025 0.025, -0.025 0.025 0.025, 0.025 0.025 0.025, -0.025 0 -0.025, -0.025 0.025 -0.025, -0.025 0 0.025, -0.025 0.025 0.025, 0.025 0 -0.025, 0.025 0.025 -0.025, 0.025 0 0.025, 0.025 0.025 0.025, "/>
+                <Color color="0.12 0.8 0, 0.12 0.8 0, 0.12 0.8 0, 0.12 0.8 0, 0.12 0.8 0, 0.12 0.8 0, 0.12 0.8 0, 0.12 0.8 0, 0.12 0.8 0, 0.12 0.8 0, 0.12 0.8 0, 0.12 0.8 0, 0.12 0.8 0, 0.12 0.8 0, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9, 0 0.5 0.9"/>
+                <LineProperties linewidthScaleFactor="2"></LineProperties>
+            </IndexedLineSet>
+            </Shape-->
+    </Primitive>
+</PrimitiveParameterMap>

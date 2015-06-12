@@ -1,0 +1,193 @@
+<!--jquery.ui initialization code-->
+<script>
+
+    SceneProperties = function()
+    {
+        EditorWidget.call(this, "SceneProperties");
+
+        this.rememberedGridCellSizeInMeters = 0;
+        this.rememberedGridSizeInCells = new x3dom.fields.SFVec2f(0.0, 0.0);
+
+        $(function() {
+
+            $( "#gridSizeDialog" ).dialog({
+                autoOpen: false,
+                width: 300,
+                resizable: false,
+                buttons: [
+                    {
+                        text: "Ok",
+                        click: function() {
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: "Cancel",
+                        click: function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            });
+
+            $("#gridSizeSpinnerX").spinner({
+                step: 2,
+                min: 2,
+                stop: function(event, ui)
+                {
+                    g_editor.getGizmoController().updateGridSize(this.value, gridSizeInCells.y, gridCellSizeInMeters);
+                }
+            });
+
+
+            $("#gridSizeSpinnerY").spinner({
+                step: 2,
+                min: 2,
+                stop: function(event, ui)
+                {
+                    g_editor.getGizmoController().updateGridSize(gridSizeInCells.x, this.value, gridCellSizeInMeters);
+                }
+            });
+
+
+            $("#gridCellSizeSpinner").spinner({
+                step: 0.01,
+                numberFormat: "n",
+                min: 0.01,
+                spin: function(event, ui)
+                {
+                    g_editor.getGizmoController().updateGridSize(gridSizeInCells.x, gridSizeInCells.y, currentReferenceUnit.toMeters($("#gridCellSizeSpinner").val()));
+                }
+            });
+
+            $("#gridCellSizeSpinner").blur(function(){ g_editor.getGizmoController().updateGridSize(gridSizeInCells.x, gridSizeInCells.y, currentReferenceUnit.toMeters($("#gridCellSizeSpinner").val()));});
+        });
+
+        var that = this;
+        g_editor.eventSystem.registerCallback("scenePropertiesChanged",that.updateLabels);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Updates the scene size / grid size labels in the UI.
+     * This is useful when the scene size or the current reference unit has changed.
+     */
+    SceneProperties.prototype.updateLabels = function()
+    {
+        var sceneSizeLabel      = document.getElementById('sceneSizeLabel');
+        var sceneSizeCellsLabel = document.getElementById('sceneSizeCellsLabel');
+        var gridCellSizeLabel   = document.getElementById('gridCellSizeLabel');
+
+        gridCellSizeLabel.textContent = currentReferenceUnit.fromMeters(gridCellSizeInMeters) + " " +
+                currentReferenceUnit.getAbbreviation();
+
+        sceneSizeCellsLabel.textContent = gridSizeInCells.x + " x " + gridSizeInCells.y;
+
+        sceneSizeLabel.textContent =
+                (gridSizeInCells.x * currentReferenceUnit.fromMeters(gridCellSizeInMeters)).toFixed(2) + " x " +
+                (gridSizeInCells.y * currentReferenceUnit.fromMeters(gridCellSizeInMeters)).toFixed(2) + " " +
+                currentReferenceUnit.getAbbreviation();
+
+
+        $("#gridSizeSpinnerX").spinner("value", gridSizeInCells.x);
+        $("#gridSizeSpinnerY").spinner("value", gridSizeInCells.y);
+
+        $("#gridCellSizeSpinner").spinner("value", currentReferenceUnit.fromMeters(gridCellSizeInMeters));
+        $("#cellSizeSpinnerLabel").html("Cell Size ("+ currentReferenceUnit.getName() + "):");
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    SceneProperties.prototype.toggleAutomaticGridConfiguration = function()
+    {
+        var gridSizeSpinnerX;
+        var gridSizeSpinnerY;
+        var gridCellSizeSpinner;
+
+
+        if ($('#autoConfigureGridSizeCheckbox').prop('checked'))
+        {
+            $('#adjustGridDialogButton').button("option", "disabled", true);
+
+            //when automatic grid configuration gets enabled, remember the manually configured values
+            this.rememberCurrentGridConfiguration();
+        }
+        else
+        {
+            $('#adjustGridDialogButton').button("option", "disabled", false);
+
+            //restore the original, user-set values after automatic configuration has been disabled
+            this.restoreGridConfiguration();
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    SceneProperties.prototype.useAutomaticGridConfiguration = function()
+    {
+        return $('#autoConfigureGridSizeCheckbox').prop('checked');
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Remembers the current grid configuration for later access.
+     * This can be used to restore user-set values after using automatic configuration.
+     */
+    SceneProperties.prototype.rememberCurrentGridConfiguration = function()
+    {
+        this.rememberedGridCellSizeInMeters = gridCellSizeInMeters;
+        this.rememberedGridSizeInCells.setValues(gridSizeInCells);
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Restores a grid configuration previously remembered.
+     */
+    SceneProperties.prototype.restoreGridConfiguration = function()
+    {
+        g_editor.getGizmoController().updateGridSize(this.rememberedGridSizeInCells.x, this.rememberedGridSizeInCells.y,
+                                 this.rememberedGridCellSizeInMeters);
+    };
+
+</script>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+
+<div class="ui-widget-header">Scene Properties</div>
+<div class="sidebarComponent ui-widget-content">
+    <div style="text-align:right;">
+
+        <strong>Grid Cell Size:</strong>
+        <div id="gridCellSizeLabel">1 m</div>
+
+        <strong>Grid Size (Cells):</strong>
+        <div id="sceneSizeCellsLabel">23 x 42 m</div>
+
+        <strong>Scene Size:</strong>
+        <div id="sceneSizeLabel">23 x 42 m</div>
+
+        <br/>
+
+        <label for="autoConfigureGridSizeCheckbox">Compute Grid Dynamically</label>
+        <input type="checkbox" id="autoConfigureGridSizeCheckbox" onchange="g_editor.getSceneProperties().toggleAutomaticGridConfiguration();"/><br/>
+
+        <br/>
+
+        <button id="adjustGridDialogButton" class="webedit-ui-button" onclick='$("#gridSizeDialog").dialog("open");'>Adjust Grid ...</button>
+
+    </div>
+
+    <!--scene size dialog window-->
+    <div id="gridSizeDialog" title="Adjust Grid Size">
+        <div style="text-align: right;">
+            <label for="gridSizeSpinnerX">Cells (X): </label><input style="width:100px;" id="gridSizeSpinnerX"/><br/>
+            <label for="gridSizeSpinnerY">Cells (Y): </label><input style="width:100px;" id="gridSizeSpinnerY"/><br/>
+
+            <label id="cellSizeSpinnerLabel" for="gridCellSizeSpinner">Cell Size (meters): </label><input style="width:100px;" id="gridCellSizeSpinner"/>
+        </div>
+    </div>
+</div>

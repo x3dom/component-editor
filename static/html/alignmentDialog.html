@@ -1,0 +1,174 @@
+<style>
+    .left { float: left; width: 150px; height: 30px;}
+    .right { float: right; width: 220px; height: 30px; }
+
+</style>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<script>
+
+    function AlignmentDialog()
+    {
+        EditorWidget.call(this,"AlignmentDialog");
+        var that = this;
+
+        //Create dialog
+        this.alignmentDialog = $( "#alignmentDialog" );
+
+        //this.componentLabel = document.getElementById("componentLabel");
+        this.refPointSelect = document.getElementById("refPointSelect");
+
+        this.targetCompSelect = document.getElementById("targetComponentSelect");
+        this.targetRefPointSelect = document.getElementById("targetRefPointSelect");
+
+        this.alignmentDistanceInput = document.getElementById("alignmentDistanceInput");
+        this.dialogDistanceLabel = document.getElementById("distanceReferenceUnitLabel");
+
+        this._selection = null;
+        this._target = null;
+        this._sceneObjects = null;
+
+
+        $("#alignmentDistanceInput").spinner({
+            step: 0.01
+        });
+
+
+        $(this.alignmentDialog).dialog({
+            autoOpen: false,
+            width: 450,
+            height: 300,
+            resizable: false,
+            buttons: [
+                {
+                    text: "Ok",
+                    click: function()
+                    {
+                        var refPoint = that._selection.getReferencePoints()[that.refPointSelect.options[that.refPointSelect.selectedIndex].innerHTML];
+
+                        var alignmentTargetRefPnt =
+                                that._target.getReferencePoints()[that.targetRefPointSelect.options[that.targetRefPointSelect.selectedIndex].innerHTML];
+                        var alignmentDistance =
+                                currentReferenceUnit.toMeters(that.alignmentDistanceInput.value);
+
+                        if(refPoint && alignmentTargetRefPnt)
+                            that.alignElements(that._selection,refPoint,that._target, alignmentTargetRefPnt, alignmentDistance);
+                        else
+                            console.log("Error: Invalid selection for alignment.")
+
+
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    click: function() {
+                        $(this).dialog("close");
+                    }
+                }
+            ],
+            open : function()
+            {
+                //TODO grey out disabled buttons
+                var selection = g_editor.getSelectionController().getSelection();
+                $(this).dialog('widget').find('button').prop('disabled', Object.keys(selection.getReferencePoints()).length == 0);
+                $(this).dialog('widget').find('button:first').prop('disabled',false);
+            }
+        });
+
+        g_editor.eventSystem.registerCallback("scenePropertiesChanged",function()
+        {
+            $(that.dialogDistanceLabel).html(currentReferenceUnit.getAbbreviation());
+        })
+    }
+
+    //----------------------------------------------------------------------------------------------------------------------
+
+    AlignmentDialog.prototype.open = function()
+    {
+        this._selection = g_editor.getSelectionController().getSelection();
+
+        //set selection reference points
+        $(this.refPointSelect).empty();
+
+        var refPoints = this._selection.getReferencePoints();
+        for(var key in refPoints)
+        {
+            var option = document.createElement('option');
+            $(option).html(key);
+            $(this.refPointSelect).append(option);
+        }
+
+        $(this.dialogDistanceLabel).html(currentReferenceUnit.getAbbreviation());
+        $(this.targetCompSelect).empty();
+
+        //get scene objects
+        this._sceneObjects = g_editor.getScene().getRegisteredSceneObjects();
+
+        var referenceSet = false;
+        for( var key in this._sceneObjects)
+        {
+            var comp = this._sceneObjects[key];
+            if(!this._selection.contains(comp))
+            {
+                if( comp.getID() != this._selection.getID())
+                {
+                    if(!referenceSet)
+                    {
+                        this.refreshDialogReferencePoints(comp);
+                        referenceSet = true;
+                    }
+
+                    var option = document.createElement('option');
+                    $(option).html(comp.getName());
+                    option.setAttribute("value",comp.id);
+                    $(this.targetCompSelect).append(option);
+                }
+            }
+        }
+
+        $(this.alignmentDialog).dialog("option","title","Select Reference Point for: ("+ this._selection.getName()+")");
+        $(this.alignmentDialog).dialog("open");
+    };
+
+    //----------------------------------------------------------------------------------------------------------------------
+
+    AlignmentDialog.prototype.refreshDialogReferencePoints = function(component)
+    {
+        this._target = component;
+
+        $(this.targetRefPointSelect).empty();
+        var refPoints = component.getReferencePoints();
+
+        for(var key in refPoints)
+        {
+            var option = document.createElement('option');
+            $(option).html(key);
+            $(this.targetRefPointSelect).append(option);
+        }
+    };
+
+    //----------------------------------------------------------------------------------------------------------------------
+
+    AlignmentDialog.prototype.alignElements = function(transformableA, refPointA, transformableB, refPointB, distanceInMeters)
+    {
+        align(transformableA, refPointA, transformableB, refPointB, distanceInMeters);
+    }
+
+</script>
+
+
+<!-- dialog window -->
+<div id="alignmentDialog" title="Select Reference Point for: " >
+    <!--div class="left"><strong>Component:</strong></div>
+    <div class="right"><label id="componentLabel"></label></div-->
+    <div class="left"><strong>Reference Point:</strong></div>
+    <div class="right"><select id="refPointSelect" onchange="/*g_editor.getComponentProperties().currentCompRefPnt = this.options[this.selectedIndex].value*/"></select></div>
+    <div class="left"><strong>Target Component:</strong></div>
+    <div class="right"><select id="targetComponentSelect" onchange="g_editor.getAlignmentDialog().refreshDialogReferencePoints(g_editor.getScene().getSceneObject(this.options[this.selectedIndex].innerHTML))"></select></div>
+    <div class="left"><strong>Reference Point:</strong></div>
+    <div class="right"><select id="targetRefPointSelect"></select></div>
+    <div class="left"><strong>Alignment Distance: </strong></div>
+    <div class="right"><input id="alignmentDistanceInput" value="0" style="width: 50px;"><strong id="distanceReferenceUnitLabel" style="padding-left: 5px;"></strong></div>
+</div>

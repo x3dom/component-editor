@@ -1,0 +1,260 @@
+<style>
+    #buttonContainer
+    {
+        padding: 4px 0;
+        text-align: center;
+        font-size: 80%;
+    }
+
+    #buttonContainer span
+    {
+        margin:0;
+        padding:2px;
+        width:46px;
+    }
+</style>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<script>
+    function SceneExplorer()
+    {
+        EditorWidget.call(this, "SceneExplorer");
+
+        var that = this;
+
+        var treeSettings =
+        {
+            title: "Dynatree", // Tree's name (only used for debug outpu)
+            minExpandLevel: 1, // 1: root node is not collapsible
+            imagePath: null, // Path to a folder containing icons. Defaults to 'skin/' subdirectory.
+            children: null, // Init tree structure from this object array.
+            initId: null, // Init tree structure from a <ul> element with this ID.
+            initAjax: null, // Ajax options used to initialize the tree strucuture.
+            autoFocus: true, // Set focus to first child, when expanding or lazy-loading.
+            keyboard: true, // Support keyboard navigation.
+            persist: false, // Persist expand-status to a cookie
+            autoCollapse: false, // Automatically collapse all siblings, when a node is expanded.
+            clickFolderMode: 1, // 1:activate, 2:expand, 3:activate and expand
+            activeVisible: true, // Make sure, active nodes are visible (expanded).
+            checkbox: true, // Show checkboxes.
+            selectMode: 3,// 1:single, 2:multi, 3:multi-hier
+            fx: { height: "toggle", duration: 500 }, // Animations, e.g. null or { height: "toggle", duration: 200 }
+            noLink: false, // Use <span> instead of <a> tags for all nodes
+            // Low level event handlers: onEvent(dtnode, event): return false, to stop default processing
+            onClick: null, // null: generate focus, expand, activate, select events.
+            onDblClick: null, // (No default actions.)
+            onKeydown: null, // null: generate keyboard navigation (focus, expand, activate).
+            onKeypress: null, // (No default actions.)
+            onFocus: function(node) {
+                node.scheduleAction("cancel");
+            }, // null: set focus to node.
+            onBlur: function(node) {
+                node.scheduleAction("cancel");
+            }, // null: remove focus from node.
+
+            // Pre-event handlers onQueryEvent(flag, dtnode): return false, to stop processing
+            onQueryActivate: null, // Callback(flag, dtnode) before a node is (de)activated.
+            onQuerySelect: null, // Callback(flag, dtnode) before a node is (de)selected.
+            onQueryExpand: null, // Callback(flag, dtnode) before a node is expanded/collpsed.
+
+            // High level event handlers
+            onPostInit: null, // syntax: onPostInit(isReloading, isError)
+            onActivate: function(node){
+                if (node.isSelected())
+                {
+                    if (!node.data.isFolder)
+                    {
+                        //TODO: handle multi-selection?
+                        var selectedElement = g_editor.getScene().findChild(node.data.key);
+
+                        if (!selectedElement)
+                        {
+                            console.log("ERROR: Cannot find element with ID " + node.data.key + ", unable to select.");
+                            return;
+                        }
+                        else
+                        {
+                            g_editor.getActiveView().elementClicked(selectedElement);
+                        }
+                    }
+                }
+            },
+            onDeactivate: null, // syntax: onDeactivate(node)
+            onSelect:  function(select, node)
+            {
+                if (!node.data.isFolder)
+                {
+                    //TODO: handle multi-selection?
+                    var selectedElement = g_editor.getScene().findChild(node.data.key);
+                    selectedElement.setVisible(select);
+
+                    //if set visible, select object but stop dragging
+                    if(select)
+                    {
+                        g_editor.getActiveView().elementClicked(selectedElement);
+                        g_editor.getDragController().stopDraggingElement();
+                    }
+                }
+            }, // Callback(flag, dtnode) when a node is (de)selected.
+
+            onExpand: null, // Callback(flag, dtnode) when a node is expanded/collapsed.
+            onLazyRead: null, // Callback(dtnode) when a lazy node is expanded for the first time.
+            onCustomRender: null, // Callback(dtnode) before a node is rendered. Return a HTML string to override.
+            onCreate: null, // Callback(dtnode, nodeSpan) after a node was rendered for the first time.
+            onRender: null, // Callback(dtnode, nodeSpan) after a node was rendered.
+            postProcess: null // Callback(data, dataType) before an Ajax result is passed to dynatree.
+        };
+
+        this._treeView = new SimpleTreeViewer("tree", treeSettings);
+        this._treeView.clear();
+        this._treeView.removeNode("null");
+        this._sceneGroupNode = this._treeView.addGroup("Scene", "Scene");
+
+        this._groupingButton = document.getElementById("groupingButton");
+
+        g_editor.eventSystem.registerCallback("selectionChanged", function() {that.refreshSelection(); })
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    SceneExplorer.prototype.refreshSelection = function()
+    {
+        var selection = g_editor.getSelectionController().getSelection();
+        if(selection)
+        {
+            var isGroup = (selection instanceof Group);
+            $(this._groupingButton).prop('disabled',!isGroup);
+
+            if(isGroup)
+            {
+                var locked = selection.isLocked();
+
+                this._groupingButton.innerHTML = "<span class='ui-button-text'>" + (locked ? "Ungroup" : "Group") + "</span>";
+
+                if(selection.isLocked())
+                {
+                    this._treeView.activate(selection.getID());
+                }
+                else
+                {
+                    //TODO multi "activation" not possible for the current dynatree selection functionality
+                    /*
+                     var children = selection.getChildren();
+                     for(var key in children)
+                     {
+                     var id = children[key].getID();
+                     //this._treeView.activate(id);
+                     }*/
+                }
+            }
+            else
+            {
+                this._groupingButton.innerHTML = "<span class='ui-button-text'>Group</span>";
+                this._treeView.activate(selection.getID());
+            }
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    SceneExplorer.prototype.addItem = function(item)
+    {
+        this._treeView.addNode(item.getID(),item.getName(), "Scene");
+        this.refreshSelection();
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    SceneExplorer.prototype.removeItem = function(item)
+    {
+        this._treeView.removeNode(item.getID());
+        this.refreshSelection();
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    SceneExplorer.prototype.getTreeView = function()
+    {
+        return this._treeView;
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    SceneExplorer.prototype.focusCurrentItem = function()
+    {
+        var currentTransformable = g_editor.getSelectionController().getSelection();
+        var runtime = g_editor.getActiveView()._x3dElement.runtime;
+
+        if (currentTransformable)
+        {
+            runtime.fitObject(currentTransformable.getMatrixTransformNode());
+        }
+        else
+        {
+            console.log("ERROR: Cannot focus on current object, no selection found.")
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    SceneExplorer.prototype.duplicateCurrentItem = function()
+    {
+        var currentTransformable = g_editor.getSelectionController().getSelection();
+        var clonedElement;
+
+        if(currentTransformable)
+        {
+            clonedElement = currentTransformable.clone();
+
+            g_editor.getScene().addSceneObject(clonedElement);
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    SceneExplorer.prototype.deleteCurrentItem = function()
+    {
+        var currentElement = g_editor.getSelectionController().getSelection();
+        if (currentElement)
+        {
+            g_editor.getScene().removeSceneObject(currentElement);
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    SceneExplorer.prototype.setSceneGroupName = function(name)
+    {
+        console.log(this._sceneGroupNode.data.title+" "+name);
+        this._sceneGroupNode.data.title = name;
+        this._sceneGroupNode.render();
+        console.log(this._sceneGroupNode.data.title+" "+name);
+    }
+
+</script>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<div class="ui-widget-header">Scene Explorer</div>
+<div class="sidebarComponent ui-widget-content">
+    <div id="tree" style="margin:4px;height:270px;">
+    </div>
+    <div id="buttonContainer">
+        <button class="webedit-ui-button" onclick="g_editor.getSceneExplorer().focusCurrentItem();">
+            Focus
+        </button>
+        <button class="webedit-ui-button" onclick="g_editor.getSceneExplorer().duplicateCurrentItem();">
+            Clone
+            <!--span class="ui-icon ui-icon-copy"></span-->
+        </button>
+        <button class="webedit-ui-button" id="groupingButton" onclick="g_editor.getSelectionController().toggleLocking();" >
+            Group
+        </button>
+        <button class="webedit-ui-button" onclick="g_editor.getSceneExplorer().deleteCurrentItem();" >
+            Delete
+            <!--span class="ui-icon ui-icon-trash"></span-->
+        </button>
+    </div>
+</div>
+

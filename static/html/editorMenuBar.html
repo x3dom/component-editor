@@ -1,0 +1,122 @@
+
+<script>
+    EditorMenuBar = function()
+    {
+        EditorWidget.call(this, "EditorMenuBar");
+
+        this._availableStyles = ["lightness", "darkness", "redmond", "smoothness", "start", "sunny"];
+
+        var comboBox = document.getElementById('uiStyleCB');
+
+        var entry;
+        if (comboBox)
+        {
+            for (var i = 0; i < this._availableStyles.length; ++i)
+            {
+                entry = document.createElement("option");
+
+                entry.setAttribute("value", this._availableStyles[i]);
+                entry.textContent = this._availableStyles[i];
+
+                comboBox.appendChild(entry);
+            }
+        }
+
+        this.uiStyleChanged = function(value)
+        {
+            var styleSheetLocation = "../static/ext/" + value + "/jquery-ui-1.10.3.custom.min.css";
+
+            document.getElementById('stylesheetLink').setAttribute("href", styleSheetLocation);
+        };
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    EditorMenuBar.prototype.toggleFullScreen = function()
+    {
+        var docElem;
+        var buttonSpan;
+
+        if (document.mozFullScreenElement  || document.webkitFullscreenElement)
+        {
+            if(document.webkitCancelFullScreen)
+            {
+                document.webkitCancelFullScreen();
+            }
+            else if(document.mozCancelFullScreen)
+            {
+                document.mozCancelFullScreen();
+            }
+
+            buttonSpan = document.getElementById('fullscreen-button-span');
+
+            if (buttonSpan)
+            {
+                buttonSpan.setAttribute("class", "ui-icon ui-icon-carat-1-ne");
+            }
+        }
+        else
+        {
+            docElem = document.documentElement;
+
+            if (docElem.webkitRequestFullScreen)
+            {
+                docElem.webkitRequestFullScreen();
+            }
+            else if (docElem.mozRequestFullScreen)
+            {
+                docElem.mozRequestFullScreen();
+            }
+
+            buttonSpan = document.getElementById('fullscreen-button-span');
+
+            if (buttonSpan)
+            {
+                buttonSpan.setAttribute("class", "ui-icon ui-icon-carat-1-sw");
+            }
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    EditorMenuBar.prototype.storeButtonClicked = function()
+    {
+        g_editor.getStorageManager().saveScene();
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    EditorMenuBar.prototype.loadButtonClicked = function(input)
+    {
+        // Check for the various File API support.
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            // Great success! All the File APIs are supported.
+        } else {
+            alert('The File APIs are not fully supported in this browser.');
+        }
+
+        g_editor.getStorageManager().loadScene(input);
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+</script>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<div style="float:left; display:inline-block;padding:3px;">
+    <button class="webedit-ui-button" onclick="location.reload(false);">New</button>
+    <button class="webedit-ui-button" onclick="$('#files')[0].click();">Load</button>
+    <button class="webedit-ui-button" onclick="g_editor.getEditorMenuBar().storeButtonClicked();">Store</button>
+    <input style="width: 0px; height: 0px; left: -10px;" type="file" id="files" name="files[]" onchange="g_editor.getEditorMenuBar().loadButtonClicked(this);this.value=null;return false;" max="1" autocomplete="off">
+</div>
+
+<div style="float:right;padding:3px;">
+    <label for="uiStyleCB">UI Style:</label>
+    <select id="uiStyleCB" class="comboBox" title="Select the UI Style" onchange="g_editor.getEditorMenuBar().uiStyleChanged(value);"></select>
+    <a href="http://www.x3dom.org"><img src="../static/images/x3dom_logo.png" style="vertical-align:middle; border:1px solid #d3d3d3"></a>
+    <button class="webedit-ui-button" onclick="g_editor.getEditorMenuBar().toggleFullScreen();" style="display:inline-block;">
+        <span id="fullscreen-button-span" class="ui-icon ui-icon-carat-1-ne"></span>
+    </button>
+    <a id="downloadAnchorElem" style="display:none"></a>
+</div>

@@ -1,0 +1,509 @@
+<style>
+@charset "utf-8";
+    /* CSS Document */
+
+#Editor2D-Overlay {
+     position: fixed;
+     top: 0px;
+     left: 0px;
+     margin: 0;
+     padding: 0;
+     width: 100%;
+     height: 100%;
+     z-index: 100000000;
+     background-color: rgba(90, 90, 90, 0.75);
+     display: none;
+ }
+
+#Editor2D-Container {
+    width: 632px;
+    height: 432px;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    padding: 0;
+    margin: -216px 0px 0px -315px;
+    background-color: rgb(60, 60, 60);
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px #333;
+}
+
+#Editor2D-Canvas {
+    margin: 15px 0px 0px 15px;
+    padding: 0;
+    border: 2px solid #CCC;
+    border-radius: 0px 0px 0px 0px;
+    cursor: url(../static/images/Editor2D-Pen.png), auto;
+    outline: none;
+}
+
+#Editor2D-Menu {
+    position: relative;
+    top: -405px;
+    left: 17px;
+    width: 30px;
+    height: 398px;
+    border: 1px solid #646464;
+    background-color: rgba(204, 204, 204, 1.0);
+}
+
+.Editor2D-Menu-Head {
+    display: block;
+    width: 30px;
+    height: 14px;
+    background: transparent url(../static/images/Editor2D-Icons.png) -25px -225px no-repeat;
+}
+
+.Editor2D-Menu-Separator {
+    display: block;
+    width: 25px;
+    height: 15px;
+    margin-left: 3px;
+    background: transparent url(../static/images/Editor2D-Icons.png) 0px -225px no-repeat;
+}
+
+#Editor2D-Icon-New {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) 0px 0px no-repeat;
+}
+
+#Editor2D-Icon-New:hover {
+    background: transparent url(../static/images/Editor2D-Icons.png) -25px 0px no-repeat;
+}
+
+#Editor2D-Icon-New:active {
+    background: transparent url(../static/images/Editor2D-Icons.png) -50px 0px no-repeat;
+}
+
+.Editor2D-Icon-Pen {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) 0px -25px no-repeat;
+}
+
+.Editor2D-Icon-Pen:hover {
+    background: transparent url(../static/images/Editor2D-Icons.png) -25px -25px no-repeat;
+}
+
+.Editor2D-Icon-Pen-Active {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) -50px -25px no-repeat;
+}
+
+.Editor2D-Icon-Pointer {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) 0px -50px no-repeat;
+}
+
+.Editor2D-Icon-Pointer:hover {
+    background: transparent url(../static/images/Editor2D-Icons.png) -25px -50px no-repeat;
+}
+
+.Editor2D-Icon-Pointer-Active {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) -50px -50px no-repeat;
+}
+
+.Editor2D-Icon-Eraser {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) 0px -75px no-repeat;
+}
+
+.Editor2D-Icon-Eraser:hover {
+    background: transparent url(../static/images/Editor2D-Icons.png) -25px -75px no-repeat;
+}
+
+.Editor2D-Icon-Eraser-Active {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) -50px -75px no-repeat;
+}
+
+.Editor2D-Icon-Snap {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) 0px -100px no-repeat;
+}
+
+.Editor2D-Icon-Snap-Active {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) -50px -100px no-repeat;
+}
+
+.Editor2D-Icon-Snap:hover {
+    background: transparent url(../static/images/Editor2D-Icons.png) -25px -100px no-repeat;
+}
+
+.Editor2D-Icon-Snap:active {
+    background: transparent url(../static/images/Editor2D-Icons.png) -50px -100px no-repeat;
+}
+
+.Editor2D-Icon-Move {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) 0px -125px no-repeat;
+}
+
+.Editor2D-Icon-Move:hover {
+    background: transparent url(../static/images/Editor2D-Icons.png) -25px -125px no-repeat;
+}
+
+.Editor2D-Icon-Move-Active {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) -50px -125px no-repeat;
+}
+
+.Editor2D-Icon-Zoom {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) 0px -150px no-repeat;
+}
+
+.Editor2D-Icon-Zoom:hover {
+    background: transparent url(../static/images/Editor2D-Icons.png) -25px -150px no-repeat;
+}
+
+.Editor2D-Icon-Zoom-Active {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) -50px -150px no-repeat;
+}
+
+.Editor2D-Icon-Accept {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) 0px -175px no-repeat;
+}
+
+.Editor2D-Icon-Accept-Inactive {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) -75px -175px no-repeat;
+}
+
+.Editor2D-Icon-Accept:hover {
+    background: transparent url(../static/images/Editor2D-Icons.png) -25px -175px no-repeat;
+}
+
+.Editor2D-Icon-Accept:active {
+    background: transparent url(../static/images/Editor2D-Icons.png) -50px -175px no-repeat;
+}
+
+.Editor2D-Icon-Abort {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 4px 0px 4px 2px;
+    cursor: default;
+    background: transparent url(../static/images/Editor2D-Icons.png) 0px -200px no-repeat;
+}
+
+.Editor2D-Icon-Abort:hover {
+    background: transparent url(../static/images/Editor2D-Icons.png) -25px -200px no-repeat;
+}
+
+.Editor2D-Icon-Abort:active {
+    background: transparent url(../static/images/Editor2D-Icons.png) -50px -200px no-repeat;
+}
+</style>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<script>
+    ShapeEditor = function()
+    {
+        var that = this;
+        EditorWidget.call(this, "ShapeEditor");
+
+        //Initialize 2D-Editor
+        var editor2DCanvas = $('#Editor2D-Canvas');
+        editor2DCanvas.editor2D();
+        editor2DCanvas.editor2D('setGridStep', gridCellSizeInMeters);
+        editor2DCanvas.editor2D('setReferenceUnit', currentReferenceUnit);
+        editor2DCanvas.on('modechanged', that.editor2D_onModeChanged);
+        editor2DCanvas.on('readychanged', that.editor2D_onReadyChanged);
+
+        g_editor.eventSystem.registerCallback("scenePropertiesChanged", that.editor2D_onScenePropertyChanged);
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*ShapeEditor.prototype.setPrimitive = function(primitive)
+    {
+        this._primitive = primitive;
+    }*/
+
+//------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Show the 2D-Editor
+     */
+    ShapeEditor.prototype.editor2D_show = function(mustBeClosed, primitive)
+    {
+        $('#Editor2D-Canvas').editor2D('clear');
+        $('#Editor2D-Icon-Accept').removeClass('Editor2D-Icon-Accept').addClass('Editor2D-Icon-Accept-Inactive');
+        $('#Editor2D-Icon-Snap').removeClass('Editor2D-Icon-Snap').addClass('Editor2D-Icon-Snap-Active');
+        $('#Editor2D-Canvas').editor2D('setSnapToGrid', true);
+        $('#Editor2D-Canvas').editor2D('setMustClosed', mustBeClosed);
+        $('#Editor2D-Canvas').editor2D();
+        this._primitive = primitive;
+        var points = primitive.getCrossSectionPointCopy();
+        if (primitive !== undefined && points !== undefined && points.length > 0)
+        {
+            $('#Editor2D-Canvas').editor2D('setPoints', points);
+        }
+        $('#Editor2D-Overlay').css('display', 'block');
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Hide the 2D-Editor
+     */
+    ShapeEditor.prototype.editor2D_hide = function()
+    {
+        $('#Editor2D-Overlay').css('display', 'none');
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Create new drawing area
+     */
+    ShapeEditor.prototype.editor2D_new = function()
+    {
+        $('#Editor2D-Canvas').editor2D('clear');
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Reset 2D-Editor view
+     */
+    ShapeEditor.prototype.editor2D_reset = function()
+    {
+        $('#Editor2D-Canvas').editor2D('resetView');
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Handle 2D-Editors 'modechanged' event
+     */
+    ShapeEditor.prototype.editor2D_onModeChanged = function(evt)
+    {
+        //retrieve "this" because of context loss
+        g_editor.getShapeEditor().editor2D_mode(evt.originalEvent.detail.mode);
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Handle 2D-Editors 'readychanged' event
+     */
+    ShapeEditor.prototype.editor2D_onReadyChanged = function(evt)
+    {
+        if (evt.originalEvent.detail.ready)
+        {
+            $('#Editor2D-Icon-Accept').removeClass('Editor2D-Icon-Accept-Inactive').addClass('Editor2D-Icon-Accept');
+        }
+        else
+        {
+            $('#Editor2D-Icon-Accept').removeClass('Editor2D-Icon-Accept').addClass('Editor2D-Icon-Accept-Inactive');
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Handle 2D-Editors 'readychanged' event
+     */
+    ShapeEditor.prototype.editor2D_onScenePropertyChanged = function(evt)
+    {
+        $('#Editor2D-Canvas').editor2D('setGridStep', gridCellSizeInMeters);
+        $('#Editor2D-Canvas').editor2D('setReferenceUnit', currentReferenceUnit);
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Toggle Snap to Grid
+     */
+    ShapeEditor.prototype.editor2D_toggleSnap = function()
+    {
+        var snapToGrid = $('#Editor2D-Canvas').editor2D('getSnapToGrid');
+
+        if (snapToGrid)
+        {
+            $('#Editor2D-Icon-Snap').removeClass('Editor2D-Icon-Snap-Active').addClass('Editor2D-Icon-Snap');
+            $('#Editor2D-Canvas').editor2D('setSnapToGrid', false);
+        }
+        else
+        {
+            $('#Editor2D-Icon-Snap').removeClass('Editor2D-Icon-Snap').addClass('Editor2D-Icon-Snap-Active');
+            $('#Editor2D-Canvas').editor2D('setSnapToGrid', true);
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Change 2D-Editors mode
+     */
+    ShapeEditor.prototype.editor2D_mode = function(mode)
+    {
+        this.editor2D_resetIcons();
+
+        switch (mode)
+        {
+            case 0:
+                $('#Editor2D-Icon-Pen').removeClass('Editor2D-Icon-Pen').addClass('Editor2D-Icon-Pen-Active');
+                $('#Editor2D-Canvas').editor2D('changeMode', 0);
+                break;
+            case 1:
+                $('#Editor2D-Icon-Pointer').removeClass('Editor2D-Icon-Pointer').addClass('Editor2D-Icon-Pointer-Active');
+                $('#Editor2D-Canvas').editor2D('changeMode', 1);
+                break;
+            case 2:
+                $('#Editor2D-Icon-Eraser').removeClass('Editor2D-Icon-Eraser').addClass('Editor2D-Icon-Eraser-Active');
+                $('#Editor2D-Canvas').editor2D('changeMode', 2);
+                break;
+            case 3:
+                $('#Editor2D-Icon-Move').removeClass('Editor2D-Icon-Move').addClass('Editor2D-Icon-Move-Active');
+                $('#Editor2D-Canvas').editor2D('changeMode', 3);
+                break;
+            case 4:
+                $('#Editor2D-Icon-Zoom').removeClass('Editor2D-Icon-Zoom').addClass('Editor2D-Icon-Zoom-Active');
+                $('#Editor2D-Canvas').editor2D('changeMode', 4);
+                break;
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Handle 2D-Editors 'modechanged' event
+     */
+    ShapeEditor.prototype.editor2D_create = function () {
+        if ($('#Editor2D-Canvas').editor2D('isReady')) {
+            //Hide editor
+            this.editor2D_hide();
+
+            //Save points for edit
+            this._primitive.setCrossSectionPoints($('#Editor2D-Canvas').editor2D('getPoints'));
+
+            //Get points for geometry
+            var points = $('#Editor2D-Canvas').editor2D('samplePoints');
+
+            this._primitive.rebuildGeometry(points.toString());
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Reset all 2D-Editor icon states
+     */
+    ShapeEditor.prototype.editor2D_resetIcons = function () {
+        $('#Editor2D-Icon-Pen').removeClass('Editor2D-Icon-Pen-Active').addClass('Editor2D-Icon-Pen');
+        $('#Editor2D-Icon-Pointer').removeClass('Editor2D-Icon-Pointer-Active').addClass('Editor2D-Icon-Pointer');
+        $('#Editor2D-Icon-Eraser').removeClass('Editor2D-Icon-Eraser-Active').addClass('Editor2D-Icon-Eraser');
+        $('#Editor2D-Icon-Move').removeClass('Editor2D-Icon-Move-Active').addClass('Editor2D-Icon-Move');
+        $('#Editor2D-Icon-Zoom').removeClass('Editor2D-Icon-Zoom-Active').addClass('Editor2D-Icon-Zoom');
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Delete the current
+     */
+    ShapeEditor.prototype.editor2D_abort = function()
+    {
+        var points = $('#Editor2D-Canvas').editor2D('getPoints');
+        if(points.length == 0)
+        {
+            //delete the current selection
+            var selection = g_editor.getSelectionController().getSelection();
+            g_editor.getScene().removeSceneObject(selection);
+
+        }
+
+        this.editor2D_hide();
+    };
+
+</script>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+<div id="Editor2D-Overlay">
+    <div id="Editor2D-Container">
+        <canvas id="Editor2D-Canvas" width="600" height="400"></canvas>
+        <div id="Editor2D-Menu">
+            <div class="Editor2D-Menu-Head"></div>
+            <div class="Editor2D-Menu-Separator"></div>
+            <a id="Editor2D-Icon-New" href="javascript:g_editor.getShapeEditor().editor2D_new();" title="New"></a>
+            <div class="Editor2D-Menu-Separator"></div>
+            <a id="Editor2D-Icon-Pen" class="Editor2D-Icon-Pen-Active" href="javascript:g_editor.getShapeEditor().editor2D_mode(0);" title="Pen Tool" ></a>
+            <a id="Editor2D-Icon-Pointer" class="Editor2D-Icon-Pointer" href="javascript:g_editor.getShapeEditor().editor2D_mode(1);" title="Pointer Tool"></a>
+            <a id="Editor2D-Icon-Eraser" class="Editor2D-Icon-Eraser" href="javascript:g_editor.getShapeEditor().editor2D_mode(2);" title="Eraser Tool"></a>
+            <div class="Editor2D-Menu-Separator"></div>
+            <a id="Editor2D-Icon-Snap" class="Editor2D-Icon-Snap-Active" href="javascript:g_editor.getShapeEditor().editor2D_toggleSnap();" title="Snap to Grid"></a>
+            <a id="Editor2D-Icon-Move" class="Editor2D-Icon-Move" href="javascript:g_editor.getShapeEditor().editor2D_mode(3);" title="Move Tool"></a>
+            <a id="Editor2D-Icon-Zoom" class="Editor2D-Icon-Zoom" href="javascript:g_editor.getShapeEditor().editor2D_mode(4);" title="Zoom Tool"></a>
+            <div class="Editor2D-Menu-Separator"></div>
+            <a id="Editor2D-Icon-Abort" class="Editor2D-Icon-Abort" href="javascript:g_editor.getShapeEditor().editor2D_abort();" title="Abort"></a>
+            <a id="Editor2D-Icon-Accept" class="Editor2D-Icon-Accept-Inactive" href="javascript:g_editor.getShapeEditor().editor2D_create();" title="Create"></a>
+        </div>
+    </div>
+</div>

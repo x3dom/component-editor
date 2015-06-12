@@ -1,0 +1,339 @@
+<script>
+    ElementProperties = function()
+    {
+        var that = this;
+        EditorWidget.call(this, "ElementProperties");
+
+        this._propertiesDiv = document.getElementById("elementPropertiesContentDiv");
+        this._buttonsDiv = document.getElementById("elementPropertiesButtonDiv");
+        this._lengthUnitSpinners = [];
+
+        g_editor.eventSystem.registerCallback("scenePropertiesChanged",function()
+        {
+            that.clearProperties();
+            var obj = g_editor.getSelectionController().getSelection();
+            if(obj)
+            {
+                that.createParameters(obj);
+            }
+        });
+
+        g_editor.eventSystem.registerCallback("selectionChanged",function()
+        {
+            that.clearProperties();
+            var obj = g_editor.getSelectionController().getSelection();
+            if(obj)
+            {
+                that.createButtons(obj);
+                that.createParameters(obj);
+            }
+        });
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Clears all the properties
+     * @returns (undefined)
+     */
+    ElementProperties.prototype.clearProperties = function ()
+    {
+        if(this._buttonsDiv)
+        {
+            for (var i = (this._buttonsDiv.children.length - 1); i >= 0; i--)
+            {
+                this._buttonsDiv.removeChild(this._buttonsDiv.children[i]);
+            }
+        }
+        if (this._propertiesDiv)
+        {
+            for (var i = (this._propertiesDiv.children.length - 1); i >= 0; i--)
+            {
+                this._propertiesDiv.removeChild(this._propertiesDiv.children[i]);
+            }
+
+            this._lengthUnitSpinners = [];
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    //update the value of all spinners
+    ElementProperties.prototype.updateSpinnerValues = function ()
+    {
+        for (var i = 0, n = this._lengthUnitSpinners.length; i < n; ++i)
+        {
+            val = this._lengthUnitSpinners[i].spinner('value');
+            val = currentReferenceUnit.fromMeters(lastReferenceUnit.toMeters(val));
+            this._lengthUnitSpinners[i].spinner('value', val);
+        }
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Creates buttons for the current primitive
+     * @param {selectedObject} the current primitive
+     */
+    ElementProperties.prototype.createButtons = function (selectedObject)
+    {
+        if(  selectedObject instanceof Extrusion || selectedObject instanceof SolidOfRevolution)
+        {
+            var editButton = document.createElement("button");
+            $(editButton).button().click(function( event ) {
+                var mustClosed = true;
+                g_editor.getShapeEditor().editor2D_show(mustClosed, selectedObject);
+            });
+            editButton.innerHTML = "<span class='ui-button-text'>Edit</span>";;
+            this._buttonsDiv.appendChild(editButton);
+        }
+
+        var alignmentButton = document.createElement("button");
+        $(alignmentButton).button().click(function( event ) {
+            g_editor.getAlignmentDialog().open();
+        });
+        alignmentButton.innerHTML = "<span class='ui-button-text'>Align ...</span>";
+        this._buttonsDiv.appendChild(alignmentButton);
+
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Creates all given parameters and adds them
+     * @param {x3dom geometry} geometry where the parameters should be set
+     * @returns (undefined)
+     */
+    ElementProperties.prototype.createParameters = function (selectedObject)
+    {
+        if(!selectedObject.getParameters)
+        return;
+
+        var parameters = selectedObject.getParameters();
+
+        for (var i = 0; i < parameters.length; i++)
+        {
+            this.addProperty(
+                {
+                    param: parameters[i],
+                    id:    "property_" + i
+                }
+            );
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Adds one property control
+     * @param {object} object includes editorName and x3domName of parameter and
+     * the value that should be set
+     * @returns (Null)
+     */
+    ElementProperties.prototype.addProperty = function(object)
+    {
+        /*if (object.param.render !== null && object.param.render === "false")
+            return;*/
+
+        var that = this;
+
+        var divID = document.createElement("div");
+        divID.setAttribute("style", "padding:1px;")
+
+        switch(object.param.constructor.name)
+        {
+            case "BoolParam":
+                boolProperty();
+                break;
+            case "VecParam":
+                vecProperty(3);
+                break;
+            default:
+                floatProperty();
+        }
+
+        //--------------------------------------------------------------------------------------------------------------
+
+        /*
+         * Clamps value on min and max if required
+         * @param {string} min minimal range of value
+         * @param {string} max maximum range of value
+         * @param {string} value param that should be clamped
+         * @returns (clamped value)
+         */
+        function clamp(min, max, value) {
+            min = parseFloat(min);
+            max = parseFloat(max);
+            if (min !== null && value < min)
+                return min;
+            else if (max !== null && value > max)
+                return max;
+
+            return value;
+        }
+
+        //--------------------------------------------------------------------------------------------------------------
+
+        //TODO: can we join (parts of) this function and the "newSpinnerProperty" function?
+        function floatProperty() {
+            var newLabel = document.createElement("label");
+            newLabel.innerHTML = object.param.name + " ";
+            newLabel.setAttribute("for", object.id);
+
+            var newInput = document.createElement("input");
+            newInput.id = object.id;
+            newInput.value = object.param.get();
+            newInput.style.width = "80px";
+
+            divID.appendChild(newLabel);
+            divID.appendChild(newInput);
+            that._propertiesDiv.appendChild(divID);
+
+            //----------------------------------------------------------------------------------------------------------
+
+            function setSpinnerValue(object)
+            {
+                var val = parseFloat(document.getElementById(object.id).value);
+                var clampedValue = clamp(object.param.min, object.param.max, val);
+
+                if(!isNaN(clampedValue))
+                {
+                    object.param.set(clampedValue);
+                    $("#" + object.id).spinner('value', clampedValue);
+                    g_editor.eventSystem.triggerEvent("selectionPropertiesChanged");
+                }
+            }
+
+            $("#" + object.id).spinner({
+                step: object.param.getStep(),
+                min:  object.param.min,
+                max:  object.param.max,
+                spin: function(e, ui)
+                {
+                    setSpinnerValue(object);
+                },
+                stop: function(e, ui)
+                {
+                    setSpinnerValue(object);
+                }
+            });
+            $("#" + object.id).blur( function()
+            {
+                setSpinnerValue(object);
+            });
+            that._lengthUnitSpinners.push($("#" + object.id));
+        }
+
+        //--------------------------------------------------------------------------------------------------------------
+
+        function boolProperty() {
+            var newLabel = document.createElement("label");
+            newLabel.innerHTML = object.param.name;
+            newLabel.setAttribute("for", object.id);
+
+            var newInput     = document.createElement("input");
+            newInput.type    = "checkbox";
+            newInput.id      = object.id;
+            newInput.checked = object.param.get() === 'true';
+
+            divID.appendChild(newLabel);
+            divID.appendChild(newInput);
+            that._propertiesDiv.appendChild(divID);
+
+            $("#" + object.id).change(function ()
+            {
+                var checked = document.getElementById(object.id).checked;
+                object.param.set(checked);
+
+                g_editor.eventSystem.triggerEvent("selectionPropertiesChanged");
+            });
+        }
+
+        //--------------------------------------------------------------------------------------------------------------
+
+        function vecProperty(vecSize)
+        {
+            var labels = [object.param.name + "(X):",
+                object.param.name + "(Y):",
+                object.param.name + "(Z):"];
+            var i;
+
+            var value = object.param.get();
+
+            var valueArray = value.toString().split(",");
+            for (i = 0; i < vecSize; i++)
+            {
+                var outerDiv  = document.createElement("div");
+                var descLabel = document.createElement("label");
+                descLabel.innerHTML = labels[i];
+                descLabel.setAttribute("for", object.id + "_" + i);
+                divID.appendChild(descLabel);
+
+                var newInput   = document.createElement("input");
+                newInput.id    = object.id + "_" + i;
+
+                newInput.value = valueArray[i];
+                newInput.style.width = "80px";
+
+                outerDiv.appendChild(descLabel);
+                outerDiv.appendChild(newInput);
+                divID.appendChild(outerDiv);
+            }
+
+            that._propertiesDiv.appendChild(divID);
+
+            function setVecProperty(object)
+            {
+                var obj0 = document.getElementById(object.id + "_0");
+                var obj1 = document.getElementById(object.id + "_1");
+                var obj2 = document.getElementById(object.id + "_2");
+
+                var obj0val = clamp(object.param.min, object.param.max, parseFloat(obj0.value));
+                var obj1val = clamp(object.param.min, object.param.max, parseFloat(obj1.value));
+                var obj2val = clamp(object.param.min, object.param.max, parseFloat(obj2.value));
+
+                object.param.set( [obj0val,obj1val,obj2val]);
+
+                obj0.value = obj0val;
+                obj1.value = obj1val;
+                obj2.value = obj2val;
+
+                g_editor.eventSystem.triggerEvent("selectionPropertiesChanged");
+
+            }
+
+            for (i = 0; i < vecSize; i++)
+            {
+                $("#" + object.id + "_" + i).spinner({
+                    step: object.param.getStep(),
+                    min: object.param.min,
+                    max: object.param.max,
+                    stop: function (e, ui)
+                    {
+                        setVecProperty(object);
+                    },
+                    spin: function(e, ui)
+                    {
+                        setVecProperty(object);
+                    }
+                });
+
+                $("#" + object.id + "_" + i).blur( function()
+                {
+                    setVecProperty(object);
+                });
+
+
+                that._lengthUnitSpinners.push($("#" + object.id + "_" + i));
+            }
+        }
+    };
+</script>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<div class="ui-widget-header">Element Properties</div>
+<div class="sidebarComponent ui-widget-content" style="text-align:right;">
+    <div id="elementPropertiesButtonDiv"></div>
+    <div id="elementPropertiesContentDiv"></div>
+</div>

@@ -1,0 +1,219 @@
+<script>
+    ComponentCatalogue = function()
+    {
+        EditorWidget.call(this, "ComponentCatalogue");
+
+        this.catalogueTreeNodes  = [];
+
+        var addComponent = function(node)
+        {
+            var typeName;
+            var comp;
+
+            if (node.isSelected()) {
+
+                if (!node.data.isFolder)
+                {
+                    comp  = new Component(node.data.key);
+
+                    comp.attachOnloadCallback(function()
+                        {
+                            //this actions should be performed after the X3D description has been loaded
+                            g_editor.getSelectionController().replaceSelection(comp);
+
+                            /*if (g_editor.getSceneExplorer())
+                            {
+                                g_editor.getSceneExplorer().addItem(comp);
+                            }*/
+                        }
+                    );
+
+                    g_editor.getScene().addSceneObject(comp);
+                }
+            }
+        };
+
+        var settings =
+        {
+            checkable: false,
+            checkbox: true,
+            selectMode: 3,
+            clickFolderMode: 1,
+            fx: null,
+            onFocus: function(node) {
+            node.scheduleAction("cancel");
+            },
+            onSelect: function(select, node) {
+
+            },
+            onBlur: function(node) {
+                node.scheduleAction("cancel");
+            },
+            onActivate: function(node){
+                //addComponent(node);
+            },
+            onClick: function(domNode, event){
+                addComponent($.ui.dynatree.getNode(domNode));
+            }
+        };
+        this._catalogueTreeView = new SimpleTreeViewer("catalogueTree", settings);
+
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    ComponentCatalogue.prototype.getTreeView = function()
+    {
+        return this._catalogueTreeView;
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * (Re-)builds the catalogue tree view from the saved groups and nodes.
+     */
+    ComponentCatalogue.prototype.buildCatalogueTreeFromGroupsAndNodes = function()
+    {
+        $("#catalogueTree").dynatree("getRoot").removeChildren();
+
+        var i;
+        var nodeData;
+
+        //add groups
+        for (i = 0; i < this.catalogueTreeNodes.length; ++i)
+        {
+            nodeData = this.catalogueTreeNodes[i];
+
+            if (nodeData.groupName == "")
+            {
+                this._catalogueTreeView.addGroup(nodeData.name, nodeData.name);
+            }
+        }
+
+        //add nodes
+        for (i = 0; i < this.catalogueTreeNodes.length; ++i)
+        {
+            nodeData = this.catalogueTreeNodes[i];
+
+            if (nodeData.groupName != "")
+            {
+                this._catalogueTreeView.addNode(nodeData.name, nodeData.name, nodeData.groupName);
+            }
+        }
+
+        //collapse groups
+        for (i = 0; i < this.catalogueTreeNodes.length; ++i)
+        {
+            nodeData = this.catalogueTreeNodes[i];
+
+            if (nodeData.groupName == "")
+            {
+                this._catalogueTreeView.collapseGroup(nodeData.name);
+            }
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Invoked when the user changes something in the component search field.
+     */
+    ComponentCatalogue.prototype.componentSearchFieldChanged = function(str)
+    {
+        this.limitCatalogueTreeToMatchingEntries(str);
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Limits the catalogue tree to the entries that contain the given string.
+     * The search can be made case sensitive by specifying the second parameter "caseSensitive" with value "true".
+     * By default (if only one parameter is given), the search is not case sensitive.
+     */
+    ComponentCatalogue.prototype.limitCatalogueTreeToMatchingEntries = function(str, caseSensitive)
+    {
+        //unfortunately, with the "dynatree" tree view, there is not other way than removing nodes
+        this.buildCatalogueTreeFromGroupsAndNodes();
+
+        var strContains;
+        var i;
+        var root = $("#catalogueTree").dynatree("getRoot");
+        var removalList = [];
+
+        if (!root.getChildren())
+            return;
+
+        //by default, the search is not case sensitive
+        if (arguments.length >= 2 && caseSensitive)
+        {
+            strContains = function(strA, strB)
+            {
+                return (strA.indexOf(strB) != -1);
+            }
+        }
+        else
+        {
+            strContains = function(strA, strB)
+            {
+                return (strA.toLowerCase().indexOf(strB.toLowerCase()) != -1);
+            }
+        }
+
+        var findNonMatchingChildren = function(node, resultList)
+        {
+            var children;
+            var childKey;
+
+            children = node.getChildren();
+
+            if (children)
+            {
+                for (childKey in children)
+                {
+                    if (children[childKey].data.isFolder)
+                    {
+                        findNonMatchingChildren(children[childKey], resultList);
+                    }
+                    else if (!strContains(children[childKey].data.title, str))
+                    {
+                        resultList.push(children[childKey]);
+                    }
+                }
+            }
+        };
+
+        findNonMatchingChildren(root, removalList);
+
+        for (i = 0; i < removalList.length; ++i)
+        {
+            removalList[i].remove();
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Invoked when the user wants to fetch some components from the database, by pressing the corresponding button.
+     */
+    ComponentCatalogue.prototype.fetchMatchingComponentsFromDB = function()
+    {
+        var searchStr = $("#componentSearchField").val();
+
+        g_editor.getStorageManager().loadComponents(searchStr);
+    };
+</script>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<div class="ui-widget-header">Component Catalogue</div>
+<div class="sidebarComponent ui-widget-content">
+
+    <input id="componentSearchField" oninput="g_editor.getComponentCatalogue().componentSearchFieldChanged(this.value);" class="ui-widget-content" style="margin:6px;width:160px" type="text"/>
+
+    <button class="webedit-ui-button" onclick="g_editor.getComponentCatalogue().fetchMatchingComponentsFromDB();">
+        <span class="ui-icon ui-icon-search"></span>
+    </button>
+
+    <div class="treeViewDiv" id="catalogueTree" style="margin:4px;height:390px;">
+    </div>
+</div>

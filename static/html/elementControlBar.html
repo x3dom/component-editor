@@ -1,0 +1,23 @@
+    <!--element tools, "floating" to the left-->
+    <div style="position:absolute;left:8px;bottom:4px;">
+        <label for="primitiveName" class="objectLabel">Element:</label>
+        <input type="text" id="primitiveName" title="Name of the selected element. Can be changed in this field." onchange="g_editor.getPrimitiveManager().setObjectName();" class="ui-widget-content" style="display:inline;"/>
+    </div>
+
+    <!--transform tools, "floating" to the right-->
+    <div style="position:absolute;right:8px;bottom:4px;">
+        <div id="transformModeButtonset" class="webedit-ui-buttonset" style="display:inline-block">
+            <input type="radio" id="translationModeButton" name="transformMode" checked="checked"/>
+            <label for="translationModeButton" onclick="g_editor.getController().Activate('translation');" >Move</label>
+
+            <input type="radio" id="rotationModeButton" name="transformMode"/>
+            <label for="rotationModeButton"    onclick="g_editor.getController().Activate('rotation');"    >Rotate</label>
+
+            <input type="radio" id="scaleModeButton" name="transformMode"   />
+            <label for="scaleModeButton"   onclick="g_editor.getController().Activate('scale');"           >Scale</label>
+        </div>
+
+        <label id="tx" style="display:inline-block;text-align:right;width:60px;">X:</label><input id="amountX" style="width:45px;" onchange="g_editor.getPrimitiveManager().updatePrimitiveTransformFromUI();"/>
+        <label id="ty" style="display:inline-block;text-align:right;width:60px;">Y:</label><input id="amountY" style="width:45px;" onchange="g_editor.getPrimitiveManager().updatePrimitiveTransformFromUI();"/>
+        <label id="tz" style="display:inline-block;text-align:right;width:60px;">Z:</label><input id="amountZ" style="width:45px;" onchange="g_editor.getPrimitiveManager().updatePrimitiveTransformFromUI();"/>
+    </div>

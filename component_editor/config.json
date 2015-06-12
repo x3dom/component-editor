@@ -1,0 +1,121 @@
+{
+    "Widgets" :
+    [
+        {
+            "name"      :   "EditorMenuBar",
+            "target"    :   "topMenuBar",
+            "filePath"  :   "../static/html/editorMenuBar.html"
+        },
+        {
+            "name"      :   "SceneExplorer",
+            "target"    :   "leftSidebar",
+            "filePath"  :   "../static/html/sceneExplorer.html"
+        },
+        {
+            "name"      :   "ElementCatalogue",
+            "target"    :   "leftSidebar",
+            "filePath"  :   "../static/html/elementCatalogue.html"
+        },
+        {
+            "name"      :   "ObjectTransformation",
+            "target"    :   "rightSidebar",
+            "filePath"  :   "../static/html/objectTransformation.html"
+        },
+        {
+            "name"      :   "EditorConfiguration",
+            "target"    :   "rightSidebar",
+            "filePath"  :   "../static/html/editorConfiguration.html"
+        },
+        {
+            "name"      :   "SceneProperties",
+            "target"    :   "rightSidebar",
+            "filePath"  :   "../static/html/sceneProperties.html"
+        },
+        {
+            "name"      :   "ElementProperties",
+            "target"    :   "rightSidebar",
+            "filePath"  :   "../static/html/elementProperties.html"
+        },
+        {
+            "name"      :   "CreateElementContextMenu",
+            "target"    :   "contextMenu",
+            "filePath"  :   "../static/html/createElementContextMenu.html"
+        },
+        {
+            "name"      :   "ShapeEditor",
+            "target"    :   "shapeEditorContainer",
+            "filePath"  :   "../static/html/shapeEditor.html"
+        },
+        {
+            "name"      :   "AlignmentDialog",
+            "target"    :   "alignmentDialogContainer",
+            "filePath"  :   "../static/html/alignmentDialog.html"
+        }
+    ],
+    "EditorViews" :
+    [
+        {
+            "name" : "main",
+            "x3dTag" : "x3domCentralSceneView"
+        }
+    ],
+    "DefaultGridCellSize"   :
+    {
+        "value" :   0.2,
+        "desc"  :   "Default size of a grid cell"
+
+    },
+    "DefaultSceneSize"  :
+    {
+        "value" :   [26, 26],
+        "desc"  :   "Number of grid cells in both dimensions as default scene size"
+    },
+    "Identifiers"   :
+    {
+        "value" :
+        {
+            "Root" : "root",
+            "Gizmos"  :
+            {
+                "axes"  :   "axes",
+                "xAxis" :   "axes__AXIS_LINE_X",
+                "yAxis" :   "axes__AXIS_LINE_Y",
+                "zAxis" :   "axes__AXIS_LINE_Z",
+                "xAxisLabel"    :   "axes__AXIS_LABEL_X",
+                "yAxisLabel"    :   "axes__AXIS_LABEL_Y",
+                "zAxisLabel"    :   "axes__AXIS_LABEL_Z",
+                "plane"         :   "planeId",
+                "gridPlaneId"        :   "plane__gridPlane",
+                "gridBordersCoordNodeId":  "plane__gridBordersCoordNode",
+                "heightCue" : "axes__AXIS_Z_CUE",
+                "translationGizmoGroup" : "translationGizmoGroup",
+                "rotationGizmoGroup" : "rotationGizmoGroup",
+                "gizmoHandleTranslationClass" : "gizmoHandleTranslation",
+                "gizmoTranslationSensorX": "transformationGizmoPlaneSensorX",
+                "gizmoTranslationSensorY": "transformationGizmoPlaneSensorY",
+                "gizmoTranslationSensorZ": "transformationGizmoPlaneSensorZ",
+                "gizmoRotationSensorX": "gizmoRotationSensorX",
+                "gizmoRotationSensorY": "gizmoRotationSensorY",
+                "gizmoRotationSensorZ": "gizmoRotationSensorZ",
+                "gizmoSensorGeometryScale": "gizmoSensorGeometryScale",
+                "translationGizmoIconEnabledClass":"translationGizmoIconEnabled",
+                "rotationGizmoIconEnabledClass":"rotationGizmoIconEnabled",
+                "translationGizmoButton":"translationGizmoButton",
+                "rotationGizmoButton":"rotationGizmoButton",
+                "connectionPointOverlays":"connectionPointOverlays"
+            }
+        },
+        "desc"  :   "List of identifiers used throughout the editor"
+    },
+    "ZAxisDisplayMode" :
+    {
+        "value" :   "FULL",
+        "length":   "50",
+        "desc"  :   "Supported Modes are NONE, FULL, POSITIVE_ONLY, NEGATIVE_ONLY"
+    },
+    "HideBBoxes" :
+    {
+        "value" :   true,
+        "desc"  :   "Specifies whether bounding boxes should always be hidden or not"
+    }
+}

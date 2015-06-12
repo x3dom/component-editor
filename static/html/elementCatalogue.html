@@ -1,0 +1,73 @@
+<script>
+    ElementCatalogue = function()
+    {
+        EditorWidget.call(this,"ElementCatalogue");
+
+        this._elementCatalogueDiv = document.getElementById("elementCatalogue");
+
+        for (var prim in g_editor.primitiveParameterMap)
+        {
+            this.addCatalogueElement(
+                    g_editor.primitiveParameterMap[prim].image,
+                    g_editor.primitiveParameterMap[prim].editorName);
+        }
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Adds one primitive element to the left bar
+     * @returns (undefined)
+     */
+    ElementCatalogue.prototype.addCatalogueElement = function(img, name) {
+        var divID = document.createElement("div");
+        divID.setAttribute("id", name);
+
+        divID.setAttribute('draggable', "true");
+        divID.ondragstart = g_editor.getController().drag;
+
+        divID.setAttribute("style", "display: inline-block;" +
+                "width:70px; height:70px; background-size:70px 70px; background-image:url('" + img + "');" +
+                "margin:2px; padding:0px; border: solid 1px " + defColor + "; border-radius: 5px;");
+
+        divID.setAttribute("onmouseover",
+                "this.style.cursor='pointer'; this.style.border = 'solid 1px " + highlightColor +
+                        "'; document.getElementById('" + name + "_inner').style.color = '" + highlightColor + "';");
+        divID.setAttribute("onmouseout",
+                "this.style.cursor='pointer'; this.style.border = 'solid 1px " + defColor +
+                        "'; document.getElementById('" + name + "_inner').style.color = '" + highlightColor + "';");
+        divID.setAttribute("onmouseleave",
+                "this.style.cursor='pointer'; this.style.border = 'solid 1px " + defColor +
+                        "'; document.getElementById('" + name + "_inner').style.color = '" + highlightColor + "';");
+
+        /*if (name == "Extrusion" || name == "Solid of Revolution") {
+            divID.onclick = function () {
+                g_editor.getShapeEditor().editor2D_show(name == "Extrusion");
+                g_editor.getShapeEditor().setPrimitiveTypeNameAndPos(name, new x3dom.fields.SFVec3f(0, 0, 0));
+            };
+        }
+        else {*/
+            divID.onclick = function ()
+            {
+                g_editor.getScene().addNewPrimitive(g_editor.primitiveParameterMap[name].className, g_editor.primitiveParameterMap[name].editorInput);
+            };
+        //}
+
+        var divIDinnen = document.createElement("div");
+        divIDinnen.setAttribute("id", name + "_inner");
+        divIDinnen.setAttribute("style", "display:table-cell; width:70px; height:70px; vertical-align:middle; text-align:center;color: " + highlightColor + ";");
+        divIDinnen.innerHTML = name;
+
+        divID.appendChild(divIDinnen);
+        this._elementCatalogueDiv.appendChild(divID);
+
+    };
+
+</script>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<div class="ui-widget-header">Element Catalogue</div>
+<div class="sidebarComponent ui-widget-content">
+    <div id="elementCatalogue"></div>
+</div>

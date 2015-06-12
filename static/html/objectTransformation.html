@@ -1,0 +1,165 @@
+<style>
+    .transformationLabel
+    {
+        display:inline-block;
+        text-align:left;
+        width:50px;
+    }
+
+    .transformationInput
+    {
+        width:45px;
+    }
+
+</style>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<script>
+    ObjectTransformation = function ()
+    {
+        var that = this;
+
+        EditorWidget.call(this, "ObjectTransformation");
+
+        this.positionInput = {};
+        this.positionInput.x = newSpinnerProperty("inputTranslationX", function(){ that.updateObjectTransformValues(); });
+        this.positionInput.y = newSpinnerProperty("inputTranslationY", function(){ that.updateObjectTransformValues(); });
+        this.positionInput.z = newSpinnerProperty("inputTranslationZ", function(){ that.updateObjectTransformValues(); });
+
+        this.positionInput.x.min(-99999999);
+        this.positionInput.y.min(-99999999);
+        this.positionInput.z.min(-99999999);
+
+        this.rotationInput = {}
+        this.rotationInput.x = newSpinnerProperty("inputRotationX", function(){ that.updateObjectTransformValues(); });
+        this.rotationInput.y = newSpinnerProperty("inputRotationY", function(){ that.updateObjectTransformValues(); });
+        this.rotationInput.z = newSpinnerProperty("inputRotationZ", function(){ that.updateObjectTransformValues(); });
+
+        this.allInputs = [];
+        this.allInputs.push(this.positionInput.x); this.allInputs.push(this.positionInput.y); this.allInputs.push(this.positionInput.z);
+        this.allInputs.push(this.rotationInput.x); this.allInputs.push(this.rotationInput.y); this.allInputs.push(this.rotationInput.z);
+
+        for(var i in this.positionInput)
+        {
+            //this.positionInput[i].min(-1.7976931348623157E+10308);
+            //this.positionInput[i].max( 1.7976931348623157E+10308);
+            this.positionInput[i].step(0.001);
+        }
+
+        for(var i in this.rotationInput)
+        {
+            this.rotationInput[i].min(-360);
+            this.rotationInput[i].max( 360);
+            this.rotationInput[i].step(0.01);
+        }
+
+        this.disableUI();
+
+        g_editor.eventSystem.registerCallback("selectionChanged", function(){ that.updateUI(); });
+        g_editor.eventSystem.registerCallback("selectionTransformChanged", function(){ that.updateUI(); });
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------
+
+    ObjectTransformation.prototype.updateObjectTransformValues = function()
+    {
+        var obj = g_editor.getSelectionController().getSelection();
+        if(obj)
+        {
+            var translation = new x3dom.fields.SFVec3f(
+                   currentReferenceUnit.toMeters(this.positionInput.x.get()),
+                   currentReferenceUnit.toMeters(this.positionInput.y.get()),
+                   currentReferenceUnit.toMeters(this.positionInput.z.get()));
+            var rotation = new x3dom.fields.SFVec3f(
+                    this.rotationInput.x.get(),this.rotationInput.y.get(),this.rotationInput.z.get());
+
+            obj.setTranslationAsVec(translation);
+            obj.setRotationAnglesAsVec(rotation);
+
+            var gizmoController = g_editor.getGizmoController();
+            if (gizmoController)
+            {
+                gizmoController.updateTransformationGizmo(obj);
+            }
+        }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------
+
+    ObjectTransformation.prototype.updateUI = function()
+    {
+        var obj = g_editor.getSelectionController().getSelection();
+
+        if(obj)
+        {
+            this.enableUI();
+            var position = obj.getTranslation();
+            var rotation = obj.getRotationAngles();
+
+            if(position && rotation)
+            {
+                this.positionInput.x.set(currentReferenceUnit.fromMeters(position.x));
+                this.positionInput.y.set(currentReferenceUnit.fromMeters(position.y));
+                this.positionInput.z.set(currentReferenceUnit.fromMeters(position.z));
+
+                this.rotationInput.x.set(rotation.x);
+                this.rotationInput.y.set(rotation.y);
+                this.rotationInput.z.set(rotation.z);
+            }
+        }
+        else
+            this.disableUI();
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Enables the transformation UI elements.
+     */
+    ObjectTransformation.prototype.enableUI = function()
+    {
+        for(var i = 0, n = this.allInputs.length; i < n; ++i )
+        {
+            this.allInputs[i].disable(false);
+        }
+    };
+
+    //-----------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Enables the transformation UI elements.
+     */
+    ObjectTransformation.prototype.disableUI = function()
+    {
+        for(var i = 0, n = this.allInputs.length; i < n; ++i )
+        {
+            this.allInputs[i].disable(true);
+        }
+    };
+
+</script>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<div class="ui-widget-header">Object Transformation</div>
+<div class="sidebarComponent ui-widget-content" style="text-align:right;">
+
+    <div style="text-align: left;">
+        <label class="transformationLabel">Position: </label>
+    </div>
+    <div>
+        <input id="inputTranslationX" class="transformationInput" />
+        <input id="inputTranslationY" class="transformationInput" />
+        <input id="inputTranslationZ" class="transformationInput" />
+    </div>
+
+    <div style="text-align: left;margin-top: 4px;">
+        <label class="transformationLabel">Rotation: </label>
+    </div>
+    <div>
+        <input id="inputRotationX" class="transformationInput" />
+        <input id="inputRotationY" class="transformationInput" />
+        <input id="inputRotationZ" class="transformationInput" />
+    </div>
+</div>

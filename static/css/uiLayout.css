@@ -1,0 +1,328 @@
+/* Because of a known issue with firefox, explicitly style everything to 100% size. */
+#htmlDoc,
+#htmlBody,
+#mainContainer
+{
+    margin: 0;
+    border: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+/* Positioning of the X3DOM log container. */
+.x3dom-logContainer
+{
+    position: absolute;
+    z-index: 3000;
+    bottom: 0;
+}
+
+
+/* Positioning of the X3DOM debug stat viewer. */
+#x3dom-state-canvas,
+#x3dom-state-viewer
+{
+    position:fixed;
+    left: 270px;
+    top: 50px;
+    z-index: 1000;
+}
+
+
+/* The central x3dom scene view. */
+#x3domCentralSceneView
+{
+    position:fixed;
+    border: 0;
+    margin: 2px;
+    padding: 0;
+    left: 260px;
+    top: 40px;
+    width:    -moz-calc(100% - 520px - 4px);
+    width: -webkit-calc(100% - 520px - 4px);
+    width:         calc(100% - 520px - 4px);
+    height:   -moz-calc(100%  - 4px);
+    height:-webkit-calc(100%  - 4px);
+    height:        calc(100%  - 4px);
+}
+
+
+/* Top menu bar, extending over the width of the page */
+#topMenuBar
+{
+    position:fixed;
+    top:0;
+    width:100%;
+    height:40px;
+}
+
+
+
+/* Bottom bar, extending over the width of the 3D context */
+#bottomMenuBar
+{
+    position:fixed;
+    bottom:0;
+    left: 260px;
+    width:    -moz-calc(100% - 520px - 4px);
+    width: -webkit-calc(100% - 520px - 4px);
+    width:         calc(100% - 520px - 4px);
+    height:40px;
+}
+
+
+
+/* Sidebars */
+.sidebar
+{
+    position:fixed;
+    border:0;
+    margin:0;
+    width: 260px;
+    top:40px;
+    height:    -moz-calc(100% - 40px);
+    height: -webkit-calc(100% - 40px);
+    height:         calc(100% - 40px);
+    overflow:auto;
+}
+
+#leftSidebar
+{
+    left:0;
+    margin-right:20px;
+}
+
+#rightSidebar
+{
+    right:0;
+    margin-left:20px;
+}
+
+
+/* Sidebar component containers */
+.sidebarComponent
+{
+    padding:4px 4px 16px 4px;
+}
+
+
+/* Small message overlays */
+#messageOverlays
+{
+    position:absolute;
+    right:270px;
+    bottom:50px;
+    z-index: 1000;
+}
+
+/* Small label overlays for primitive / connection points */
+#connectionPointOverlays
+{
+    position:absolute;
+
+    left:0;
+    top:0;
+    z-index: 1000;
+}
+
+.selectedObjectConnectionPointLabel
+{
+    position:absolute;
+
+    padding:4px;
+
+    font-weight: bold;
+
+    opacity: 0.8;
+    background: lightgreen;
+    border: 1px solid darkgreen;
+    border-radius: 4px;
+}
+
+.highlightConnectionPointLabel
+{
+    position:absolute;
+
+    padding:4px;
+
+    font-weight: bold;
+
+    opacity: 0.8;
+    background: #3d5eee;
+    border: 1px solid darkgreen;
+    border-radius: 4px;
+}
+
+.inactiveConnectionPointLabel
+{
+    position:absolute;
+
+    padding:4px;
+
+    font-weight: bold;
+
+    opacity: 0.3;
+    background: #ee3250;
+    border: 1px dotted #644f4a;
+    border-radius: 4px;
+}
+
+/* Transformation gizmo control overlays */
+.transformationGizmoControlOverlays
+{
+    position: absolute;
+    text-align:center;
+    width:164px;
+    height:80px;
+    margin:0;
+    padding:0;
+    border:none;
+    border-radius: 5px;
+    right:   -moz-calc(50% - 82px);
+    right:-webkit-calc(50% - 82px);
+    right:        calc(50% - 82px);
+    top: 52px;
+    z-index: 1000;
+    background-color: rgba(148, 148, 148, 0.8);
+}
+
+.rotationGizmoIconEnabled, .rotationGizmoIconDisabled,
+.translationGizmoIconEnabled, .translationGizmoIconDisabled
+{
+    display: inline-block;
+    margin: 8px 4px;
+    padding:0;
+    border: 0;
+    width: 64px;
+    height:64px;
+    background-color: rgba(216, 216, 216, 0.8);
+    border-radius: 5px;
+}
+
+#translationGizmoButton:hover, #rotationGizmoButton:hover
+{
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.rotationGizmoIconEnabled
+{
+    background-image:url('../../static/images/rotationGizmo.png');
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.rotationGizmoIconDisabled
+{
+    background-image:url('../../static/images/rotationGizmoDisabled.png');
+}
+
+.translationGizmoIconEnabled
+{
+    background-image:url('../../static/images/translationGizmo.png');
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.translationGizmoIconDisabled
+{
+    background-image:url('../../static/images/translationGizmoDisabled.png');
+}
+
+/* Context menu for the 3D scene view */
+#contextMenu {
+    position: fixed;
+    opacity: 0.85;
+    display: none;
+    z-index: 10001;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.ContextMenuEntry {
+    padding:2px;
+}
+
+.ContextMenuEntry:hover {
+    background: gray;
+    color: white;
+    cursor: pointer;
+    padding:2px;
+}
+
+/* Orientation indicator for the 3D scene view */
+#x3domAxisSceneView {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    left: 260px;
+    bottom: 42px;
+    border: none;
+    z-index: 1000;
+}
+
+/* Viewpoint selection and orientation box */
+#viewpointControl {
+    position: absolute;
+    right: 272px;
+    top: 52px;
+    z-index: 1000;
+    background-color: rgba(148, 148, 148, 0.8);
+    border-radius: 5px;
+}
+
+#viewpointSelectors {
+    float: left;
+    width: 98px;
+    margin: 8px 0 8px 0;
+    border-left: 1px solid #888;
+    padding-left: 8px;
+    font-size:1.2em;
+}
+
+.viewpointSelector, .viewpointSelector:active, .viewpointSelector:link {
+    text-align: center;
+    float: left;
+    width: 26px;
+    height: 26px;
+    margin: 2px;
+    cursor: hand;
+    display: block;
+    background-color: rgba(216, 216, 216, 0.8);
+    color: #666;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.viewpointSelector:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.viewpointSelectorBig, .viewpointSelectorBig:active, .viewpointSelectorBig:link {
+    text-align: center;
+    float: left;
+    width: 86px;
+    height: 26px;
+    margin: 2px;
+    cursor: hand;
+    display: block;
+    background-color: rgba(216, 216, 216, 0.8);
+    color: #666;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.viewpointSelectorBig:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+
+/* Orientation box for the 3D scene view */
+#x3domOrientationSceneView {
+    width: 100px;
+    height: 100px;
+    border: none;
+    float: left;
+    margin-bottom:8px;
+}

@@ -1,0 +1,85 @@
+<script>
+    CreateElementContextMenu = function()
+    {
+        EditorWidget.call(this, "CreateElementContextMenu");
+
+        for (var prim in g_editor.primitiveParameterMap)
+        {
+            this.addContextMenuEntry(g_editor.primitiveParameterMap[prim]);
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    CreateElementContextMenu.prototype.addContextMenuEntry = function(description)
+    {
+        var div = document.getElementById("innerContextMenu");
+        var that = this;
+
+        var divPrim = document.createElement("div");
+        divPrim.setAttribute("id", "ctx_" + description.editorName);
+        divPrim.setAttribute("class", "ContextMenuEntry ui-widget-content");
+
+        divPrim.innerHTML = description.editorName;
+
+        div.appendChild(divPrim);
+
+        divPrim.onclick = function ()
+        {
+                var obj = g_editor.getScene().addNewPrimitive(description.className);
+
+                /*f (obj) {  // null if 2nd origin
+                    obj.setTranslationAsVec(g_editor.getShapeEditor._primitivePos);
+                    g_editor.getPrimitiveManager().selectObject(obj.getID());
+                }*/
+
+
+            document.getElementById("contextMenu").style.display = "none";
+        };
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    CreateElementContextMenu.prototype.createElemOnClick = function(event)
+    {
+        var div = document.getElementById("contextMenu");
+        var runtime = document.getElementById("x3domCentralSceneView").runtime;
+        var canvas = runtime.canvas;
+
+        // if right button released and not navigating or interacting
+        if (event.button == 2 && !canvas.doc._viewarea.isMoving())
+        {
+            var elem = canvas.canvas.offsetParent;
+            var canvasPos = elem.getBoundingClientRect();
+
+            var x = canvasPos.left + event.layerX;
+            var y = canvasPos.top  + event.layerY;
+
+            // get ray from eye through mouse position and calc dist to ground plane
+            var ray = runtime.getViewingRay(event.layerX, event.layerY);
+            var len = 100;
+
+            // if ray not parallel to plane and reasonably near then use d
+            if (Math.abs(ray.dir.y) > x3dom.fields.Eps) {
+                var d = -ray.pos.y / ray.dir.y;
+                len = (d < len) ? d : len;
+            }
+
+            //g_editor.getShapeEditor()._primitivePos = ray.pos.add(ray.dir.multiply(len));
+
+            div.style.left = (x - 1) + "px";
+            div.style.top  = (y - 1) + "px";
+
+            div.style.display = "table-cell";
+        }
+        else {
+            div.style.display = "none";
+        }
+    };
+
+</script>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<div class="ui-widget-header">New Primitive:</div>
+<div id="innerContextMenu" style="padding:2px;"></div>

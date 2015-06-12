@@ -1,0 +1,38 @@
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<script>
+
+    function ComponentProperties()
+    {
+        EditorWidget.call(this,"ComponentProperties");
+
+        var that = this;
+        g_editor.eventSystem.registerCallback("selectionChanged", function()
+        {
+            that.update();
+        });
+
+
+        this.update = function()
+        {
+            var selection = g_editor.getSelectionController().getSelection();
+            $("#componentName").html(selection == null ? "[ ]" : selection.getName() );
+            $("#componentType").html( (selection == null || selection instanceof  Group) ? "[ ]" : selection.getTypeName());
+            $("#componentClass").html( (selection == null || selection instanceof  Group) ? "[ ]" : selection.getClassName());
+        }
+    }
+</script>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<div class="ui-widget-header">Component Properties</div>
+<div class="sidebarComponent ui-widget-content" >
+    <div><strong>Name:</strong></div>
+    <div id="componentName">[] </div>
+    <div><strong>Type:</strong></div>
+    <div id="componentType">[]</div>
+    <div><strong>Class:</strong></div>
+    <div id="componentClass">[]</div>
+    <button class="webedit-ui-button" onclick='g_editor.getAlignmentDialog().open();'  style="/*float:right*/"  >Align ...</button>
+</div>
+

@@ -1,0 +1,181 @@
+<script>
+    EditorConfiguration = function()
+    {
+        EditorWidget.call(this,"EditorConfiguration");
+        this.fillReferenceUnitComboBox();
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     *  Enables or disables the snap-to-grid feature
+     */
+    EditorConfiguration.prototype.setGridSnappingStatus = function(value)
+    {
+        //...
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     *  Returns the current state (on / off) of the snap-to-grid feature
+     */
+    EditorConfiguration.prototype.getGridSnappingStatus = function()
+    {
+        var checkbox = document.getElementById('snapToGridCheckbox');
+
+        if (checkbox)
+        {
+            if ($('#snapToGridCheckbox').prop('checked'))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     *  Returns the current state (on / off) of the turntable rotation mode
+     */
+    EditorConfiguration.prototype.getTurntableModeStatus = function()
+    {
+        var checkbox = document.getElementById('turntableModeCheckbox');
+
+        if (checkbox)
+        {
+            if ($('#turntableModeCheckbox').prop('checked'))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Toggles the visibility of the given 3D element class (e.g., "Box" or "Origin")
+     */
+    EditorConfiguration.prototype.toggleElementClassVisibility = function(elementClassName)
+    {
+        var shapeDOMElements = document.getElementsByTagName("Shape");
+        var i;
+
+        for (i = 0; i < shapeDOMElements.length; ++i)
+        {
+            if (shapeDOMElements[i].getAttribute("elementClass") == elementClassName)
+            {
+                g_editor.getController().toggleX3DOMShapeVisibility(shapeDOMElements[i]);
+            }
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /*
+     * Fills the reference unit combo box with entries that represent all available reference units.
+     */
+    EditorConfiguration.prototype.fillReferenceUnitComboBox = function()
+    {
+        var comboBox = document.getElementById('referenceUnitCB');
+        var unitHash;
+        var entry;
+
+        if (comboBox)
+        {
+            //if there are already any entries, delete them
+            comboBox.innerHTML = "";
+
+            for (unitHash in ReferenceUnits)
+            {
+                entry = document.createElement("option");
+
+                entry.setAttribute("value", ReferenceUnits[unitHash].name);
+                entry.textContent = ReferenceUnits[unitHash].name;
+
+                comboBox.appendChild(entry);
+            }
+
+            //update / initialize reference unit
+            ReferenceUnits.referenceUnitChanged(comboBox.value);
+        }
+    };
+
+    /*
+     * Show or hide X3DOM debug stats
+     */
+    EditorConfiguration.prototype.toggleDebugStats = function()
+    {
+        document.getElementById("x3domCentralSceneView").runtime.statistics();
+    };
+
+
+    /*
+     * Show or hide debug log
+     */
+    EditorConfiguration.prototype.toggleDebugLog = function()
+    {
+        document.getElementById("x3domCentralSceneView").runtime.debug();
+    };
+
+</script>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<div id="editorConfiguration">
+    <div class="ui-widget-header">Editor Configuration</div>
+    <div class="sidebarComponent ui-widget-content">
+        <form style="text-align:right;">
+            <label for="showGridCheckbox">Show Grid</label>
+            <input type="checkbox" id="showGridCheckbox" checked="checked" onchange="g_editor.getGizmoController().toggleGridVisibility();"/><br/>
+
+            <label for="showAxesCheckbox">Show Axes</label>
+            <input type="checkbox" name="showAxesCheckbox" id="showAxesCheckbox" checked="checked" onchange="g_editor.getGizmoController().toggleAxesVisibility();"/><br/>
+
+            <label for="showAxisLabelsCheckbox">Show Axis Labels</label>
+            <input type="checkbox" id="showAxisLabelsCheckbox" checked="checked" onchange="g_editor.getGizmoController().toggleAxisLabelsVisibility();"/><br/>
+
+            <label for="showAxisLabelsCheckbox">Show Height Cues</label>
+            <input type="checkbox" id="showHeightCuesCheckbox" checked="checked" onchange="g_editor.getGizmoController().toggleHeightCueVisibility();"/><br/>
+
+
+            <label for="showConnectionPointLabelsCheckbox">Show Connection Point Labels</label>
+            <input type="checkbox" id="showConnectionPointLabelsCheckbox" onchange="g_editor.getGizmoController().toggleConnectionPointLabelsVisibility();"/><br/>
+
+            <label for="showSnapPointsCheckbox">Show Snap Points/Vectors</label>
+            <input type="checkbox" id="showSnapPointsCheckbox" checked="checked" onchange="g_editor.getEditorConfiguration().toggleElementClassVisibility('Reference Point');"/><br/>
+
+            <label for="showReferenceFrameCheckbox">Show Reference Frames</label>
+            <input type="checkbox" id="showReferenceFrameCheckbox" checked="checked" onchange="g_editor.getEditorConfiguration().toggleElementClassVisibility('Origin');"/><br/>
+
+            <label for="showDebugStatsCheckbox">Show Debug Stats</label>
+            <input type="checkbox" id="showDebugStatsCheckbox" onchange="g_editor.getEditorConfiguration().toggleDebugStats();"/><br/>
+
+            <label for="showDebugLogCheckbox">Show Debug Log</label>
+            <input type="checkbox" id="showDebugLogCheckbox" onchange="g_editor.getEditorConfiguration().toggleDebugLog();"/><br/>
+
+            <br/>
+
+            <label for="referenceUnitCB">Reference Unit:</label>
+            <select id="referenceUnitCB" class="comboBox" title="Select the current reference unit" onchange="ReferenceUnits.referenceUnitChanged(value);"></select><br/>
+
+            <br/>
+
+            <label for="snapToGridCheckbox">Snap to grid</label>
+            <input type="checkbox" id="snapToGridCheckbox" checked="checked"/><br/>
+
+            <br/>
+
+            <label for="turntableModeCheckbox">Turntable navigation </label>
+            <input type="checkbox" id="turntableModeCheckbox" checked="checked" onchange="g_editor.getController().toggleTurntableNavigation();"/><br/>
+        </form>
+    </div>
+</div>
