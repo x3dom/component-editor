@@ -9,9 +9,9 @@ $.fn.viewConnector = (function () {
         var that = this,
             api = {
                 connected : null,
-                viewport : 'both', // 'dest', 'origin'
-                active:null,
-                resetActive: function() {
+                viewport  : 'both', // 'dest', 'origin'
+                active    : null,
+                resetActive : function() {
                     api.active = null;
                     clearTimeout(api._reset)
                 },
@@ -56,20 +56,14 @@ $.fn.viewConnector = (function () {
                     return that;
                 },
                 setOrientation : function(runtime, target, event) {
-                    
-
-
                     var viewpoint = runtime.viewpoint(),
                         _xmlNode = viewpoint._xmlNode,
                         position,
                         orientation;
 
-                    
                     if( target.canvas.doc._viewarea.isAnimating() ) return;
                     
-
                     if(!_xmlNode) {
-                        
                         throw "No <viewpoint> set";
                     }
 
