@@ -56,48 +56,36 @@ $.fn.viewConnector = (function () {
                     return that;
                 },
                 setOrientation : function(runtime, target, event) {
-                    var viewpoint = runtime.viewpoint(),
-                        _xmlNode = viewpoint._xmlNode,
-                        position,
-                        orientation;
-
-                    if( target.canvas.doc._viewarea.isAnimating() ) return;
-                    
-                    if(!_xmlNode) {
-                        throw "No <viewpoint> set";
-                    }
-
                     try {
-                        _xmlNode = $(_xmlNode);
+                        var viewpoint = runtime.viewpoint(),
+                            targetVp = target.viewpoint();
 
-                        var position = SFVec3f.parse( _xmlNode.attr('position') || "0,0,0" )
-                        var vpLength = SFVec3f.parse( _xmlNode.attr('position') || "0,0,0" ).subtract( viewpoint.getCenterOfRotation() ).length();
+                        var upVector = targetVp.getViewMatrix().inverse().e1().normalize();
 
-                        // Pos(t1) = CoR(t1) + dist( CoR(t2) - Pos(t2)  )
-                        // normalize returns the unit vector ( direction vector )
-                        position = viewpoint.getCenterOfRotation()
-                            .add( 
-                                //distance between CoR and the target viewpoint
-                                event.position
-                                .subtract( 
-                                    target.viewpoint().getCenterOfRotation()
-                                )
-                            .normalize()
-                            .multiply(vpLength) 
-                        );
-                         _xmlNode.attr('orientation', event.orientation)
-                            .attr('position', position )
+                        if( runtime.navigationType() == 'turntable') {
+                            upVector = new SFVec3f(0,1,0);
+                        }
+
+
+                        var _vp = runtime.viewpoint();
+                        var _VpPosition = _vp.getViewMatrix().inverse().e3()
+                            distanceToCoR = _vp.getCenterOfRotation().subtract( _VpPosition ).length();
+
+                        var pos;
+                        var targetPos = event.position.subtract( 
+                                            targetVp.getCenterOfRotation()
+                                        ).normalize().multiply(distanceToCoR)
+
+                        // NOTE: when up vector changes should the we change and the targetPos and the forward vector???
+                        pos = SFMatrix4f.lookAt( targetPos , new SFVec3f(0,0,0), upVector); //new SFVec3f(0,1,0) );
+
+                        _vp.setView( pos.inverse() )
+                        runtime.triggerRedraw();
 
                     } catch(e) {
+                        console.log(target)
                         console.error(e)
                     }
-                   
-                    // Disable the mouse button pan - but it has some issues when rotating with CoR != [0,0,0]
-                    // viewpoint._viewMatrix._03 =
-                    // viewpoint._viewMatrix._13 = 0;
-                    // viewpoint._viewMatrix._23 = -vpLength;
-
-                    // runtime.triggerRedraw();
                 },
                 unbind : function() {
                 }
