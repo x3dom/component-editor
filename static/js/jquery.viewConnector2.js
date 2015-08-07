@@ -109,19 +109,19 @@ $.fn.viewConnector = (function () {
                 }
             }
 
-        if(this.data('x3dsync')) {
-            api = this.data('x3dsync')
+        if(this.data('viewConnector')) {
+            api = this.data('viewConnector')
         } else {
-            this.data('x3dsync', api)
+            this.data('viewConnector', api)
         }
 
         // get the command;
-        if(typeof options == 'string' && _.include(_.keys(api), options) ) {
-            command = options;
-            return _.isFunction( api[command] ) ? api[command]() : api[command];
-        }
+        // if(typeof options == 'string' && _.include(_.keys(api), options) ) {
+        //     command = options;
+        //     return _.isFunction( api[command] ) ? api[command]() : api[command];
+        // }
 
-//        _.extend(api, options);
+        //  _.extend(api, options);
         for(var k in options) {
             api[k] = options[k]
         }
