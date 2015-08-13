@@ -26,8 +26,8 @@ function FloatParam(description, targetNode)
     Param.call(this, description, targetNode);
 
     this._value = description.value;
-    this.min = description.min ? description.min : -1.7976931348623157E+10308;
-    this.max = description.max ? description.max : 1.7976931348623157E+10308;
+    this.min = description.min ? description.min : -Number.MAX_VALUE;
+    this.max = description.max ? description.max : Number.MAX_VALUE;
     this._step = description.step;
 
     var that = this;
@@ -66,8 +66,8 @@ function VecParam(description, targetNode)
 
     this._value = description.value;
     this._step = description.step;
-    this.min = description.min ? description.min : -1.7976931348623157E+10308;
-    this.max = description.max ? description.max : 1.7976931348623157E+10308;
+    this.min = description.min ? description.min : -Number.MAX_VALUE;
+    this.max = description.max ? description.max : Number.MAX_VALUE;
 
     var that = this;
 
