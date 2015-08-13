@@ -9,7 +9,7 @@ SimpleTreeViewer = function(treeElementID, settings){
     this.treeSettings = settings;
 
     // Initialization of the treeview
-    $("#"+treeElementID).dynatree(this.treeSettings);
+    $("#"+treeElementID).fancytree(this.treeSettings);
 };
 
 /*
@@ -28,15 +28,15 @@ SimpleTreeViewer.prototype.addNode = function (id, text, group) {
     }
     else
     {
-        groupNode = $("#" + this.treeID).dynatree("getRoot");
+        groupNode = $("#" + this.treeID).fancytree("getRootNode");
     }
 
-    groupNode.addChild({
+    groupNode.addChildren({
         title: text,
         key: id,
         //icon: "primitives.jpg",
-        select: true,
-        activate: true,
+        selected: true,
+        //activate: true,
         hideCheckbox: !this.checkable
     });
 };
@@ -44,13 +44,12 @@ SimpleTreeViewer.prototype.addNode = function (id, text, group) {
 
 SimpleTreeViewer.prototype.addGroup = function (id, text) {
 
-    var rootNode = $("#" + this.treeID).dynatree("getRoot");
-
-    var childNode = rootNode.addChild({
+    var rootNode = $("#" + this.treeID).fancytree("getRootNode");
+    var childNode = rootNode.addChildren({
         title: text,
         key: id,
         isFolder: true,
-        select: true,
+        selected: true,
         selectMode: 3,
         expand: true,
         hideCheckbox: !this.checkable
@@ -62,7 +61,7 @@ SimpleTreeViewer.prototype.addGroup = function (id, text) {
 
 SimpleTreeViewer.prototype.collapseGroup = function(id)
 {
-    var node = $("#" + this.treeID).dynatree("getTree").getNodeByKey(id);
+    var node = $("#" + this.treeID).fancytree("getTree").getNodeByKey(id);
 
     if (node)
     {
@@ -73,7 +72,7 @@ SimpleTreeViewer.prototype.collapseGroup = function(id)
 
 SimpleTreeViewer.prototype.expandGroup = function(id)
 {
-    var node = $("#" + this.treeID).dynatree("getTree").getNodeByKey(id);
+    var node = $("#" + this.treeID).fancytree("getTree").getNodeByKey(id);
 
     if (node)
     {
@@ -91,7 +90,7 @@ SimpleTreeViewer.prototype.moveExistingNodeToGroup = function (node, group) {
 
 
 SimpleTreeViewer.prototype.getNode = function (id) {
-    return $("#" + this.treeID).dynatree("getTree").getNodeByKey(id);
+    return $("#" + this.treeID).fancytree("getTree").getNodeByKey(id);
 };
 
 
@@ -111,13 +110,13 @@ SimpleTreeViewer.prototype.rename = function (id, name) {
 
 
 SimpleTreeViewer.prototype.activate = function (id) {
-    var tree = $("#" + this.treeID).dynatree("getTree");
+    var tree = $("#" + this.treeID).fancytree("getTree");
     tree.activateKey(id);
 };
 
 SimpleTreeViewer.prototype.clear = function()
 {
-    var rootNode = $("#" + this.treeID).dynatree("getRoot");
+    var rootNode = $("#" + this.treeID).fancytree("getRootNode");
     rootNode.removeChildren();
 }
 
