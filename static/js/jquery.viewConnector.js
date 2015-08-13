@@ -10,6 +10,9 @@
         /**
          * Initialize the ViewConnector
          */
+
+        this.active = null;
+
         this.init = function ()
         {
             //Set default options
@@ -41,14 +44,87 @@
          * Add viewpointChanged listeners to all viewpoints that are bind to the connected scene
          */
         this.addViewpointChangedListeners = function()
-        {
+        {   
+            /*
             var bindBag = this._connectedScene.runtime.viewpoint()._stack._bindBag;
 
             for (var i=0; i<bindBag.length; i++)
             {
                 bindBag[i]._xmlNode.addEventListener("viewpointChanged", that.viewPointChangedHandler);
             }
+            */
+            var self = this;
+            var origin = this._scene.runtime,
+                dest = this._connectedScene.runtime;
+
+            /* TODO add orthoviewpoint to the selector */
+            $(this._scene).find('viewpoint').on('viewpointChanged', function(event) {
+                if(self.active != origin && self.active != null ) return;
+                self.active = origin;
+                clearTimeout(self._reset);
+                self._reset = setTimeout(self.resetActive.bind(self), 60);
+                
+                
+                self.setOrientation(origin, dest, event.originalEvent)
+            });
+
+            /* TODO add orthoviewpoint to the selector */
+            $(this._connectedScene).find('viewpoint').on('viewpointChanged', function(event) {
+                if(self.active != dest && self.active != null ) return;
+                self.active = dest;
+                clearTimeout(self._reset);
+                self._reset = setTimeout(self.resetActive.bind(self), 60);
+                self.setOrientation(dest, origin, event.originalEvent)
+            })
         };
+
+        this._reset = -1;
+        this.resetActive = function() {
+            this.active = null;
+        }
+
+
+        this.setOrientation = function(origin, dest, event) {
+             try {
+                
+                var SFMatrix4f = x3dom.fields.SFMatrix4f;
+                var SFVec3f = x3dom.fields.SFVec3f;
+
+                var viewpoint = dest.viewpoint(),
+                    originVp = origin.viewpoint(),
+                    originVm = origin.viewMatrix();
+
+                var _vp = dest.viewpoint();
+                var viewpointPosition = dest.viewMatrix().inverse().e3(),
+                    distanceToCoR = _vp.getCenterOfRotation().subtract( viewpointPosition ).length();
+
+                // Taken from x3dom fire viewpointChanged
+                var e_viewtrafo = originVp.getCurrentTransform();
+                e_viewtrafo = e_viewtrafo.inverse().mult(originVm);
+                var e_mat = e_viewtrafo.inverse();
+                var e_rotation = new x3dom.fields.Quaternion(0, 0, 1, 0);
+                e_rotation.setValue(e_mat);
+
+                var upVector = e_rotation.toMatrix().e1();
+                var destPos =   viewpoint.getCenterOfRotation().add(
+                                    originVm.inverse().e3().subtract( 
+                                        originVp.getCenterOfRotation()
+                                    ).normalize().multiply(distanceToCoR)
+                                );
+
+                var pos = SFMatrix4f.lookAt( destPos, viewpoint.getCenterOfRotation(), upVector );
+                dest.canvas.doc._viewarea._transMat =  SFMatrix4f.identity();
+                dest.canvas.doc._viewarea._rotMat =  SFMatrix4f.identity();
+                dest.canvas.doc._viewarea._movement = new SFVec3f(0, 0, 0);
+
+                _vp.setView( pos.inverse() )
+
+                dest.triggerRedraw();
+            // errors are not caught somewhere else and it's difficult to debug
+            } catch(e) {
+                console.error(e)
+            }
+        }
 
         /**
          * Handles viewpointChanged events from all viewpoints that are bind to the connected scene

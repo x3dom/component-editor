@@ -58,7 +58,8 @@ $.fn.viewConnector = (function () {
                 setOrientation : function(runtime, target, event) {
                     try {
                         var viewpoint = runtime.viewpoint(),
-                            targetVp = target.viewpoint();
+                            targetVp = target.viewpoint(),
+                            targetCamera = target.viewpoint().getViewMatrix().inverse();
 
                         var upVector = targetVp.getViewMatrix().inverse().e1().normalize();
 
@@ -72,12 +73,14 @@ $.fn.viewConnector = (function () {
                             distanceToCoR = _vp.getCenterOfRotation().subtract( _VpPosition ).length();
 
                         var pos;
-                        var targetPos = event.position.subtract( 
+                        var targetPos = targetCamera.e3().subtract( 
                                             targetVp.getCenterOfRotation()
                                         ).normalize().multiply(distanceToCoR)
-
+                        console.log('+------------------------')
+                        console.log(target)
+                        console.log( upVector.normalize() )
                         // NOTE: when up vector changes should the we change and the targetPos and the forward vector???
-                        pos = SFMatrix4f.lookAt( targetPos , new SFVec3f(0,0,0), upVector); //new SFVec3f(0,1,0) );
+                        pos = SFMatrix4f.lookAt( targetPos , new SFVec3f(0,0,0).cross(upVector), upVector); //new SFVec3f(0,1,0) );
 
                         _vp.setView( pos.inverse() )
                         runtime.triggerRedraw();
