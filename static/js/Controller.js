@@ -62,7 +62,7 @@ function Controller(){
                 document.getElementById("orthoViewPointRight").setAttribute('set_bind','true');
                 runtime.resetView();
                 runtime.examine();
-                document.getElementById("planeId").setAttribute("rotation", "0 1 0 1.57079632679");
+                document.getElementById("planeId").setAttribute("rotation", "0 1 0 " + Math.PI / 2);
                 //document.getElementById("depthMode").setAttribute("readOnly", "true");
                 break;
             case "left":
@@ -71,7 +71,7 @@ function Controller(){
                 document.getElementById("orthoViewPointLeft").setAttribute('set_bind','true');
                 runtime.resetView();
                 runtime.examine();
-                document.getElementById("planeId").setAttribute("rotation", "0 1 0 1.57079632679");
+                document.getElementById("planeId").setAttribute("rotation", "0 1 0 " + Math.PI / 2);
                 //document.getElementById("depthMode").setAttribute("readOnly", "true");
                 break;
             case "top":
@@ -80,7 +80,7 @@ function Controller(){
                 document.getElementById("orthoViewPointTop").setAttribute('set_bind','true');
                 runtime.resetView();
                 runtime.examine();
-                document.getElementById("planeId").setAttribute("rotation", "1 0 0 -1.57079632679");
+                document.getElementById("planeId").setAttribute("rotation", "1 0 0 -" + Math.PI / 2);
                 //document.getElementById("depthMode").setAttribute("readOnly", "true");
                 break;
             case "bottom":
@@ -89,7 +89,7 @@ function Controller(){
                 document.getElementById("orthoViewPointBottom").setAttribute('set_bind','true');
                 runtime.resetView();
                 runtime.examine();
-                document.getElementById("planeId").setAttribute("rotation", "1 0 0 -1.57079632679");
+                document.getElementById("planeId").setAttribute("rotation", "1 0 0 -" + Math.PI / 2);
                 //document.getElementById("depthMode").setAttribute("readOnly", "true");
                 break;
             case "free":
@@ -103,7 +103,7 @@ function Controller(){
                     runtime.examine();
                 }
 
-                document.getElementById("planeId").setAttribute("rotation", "1 0 0 -1.57079632679");
+                document.getElementById("planeId").setAttribute("rotation", "1 0 0 -" + Math.PI / 2);
                 //document.getElementById("depthMode").setAttribute("readOnly", "false");
                 break;
         }
