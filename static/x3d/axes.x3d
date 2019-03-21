@@ -19,7 +19,7 @@
 			<!-- Y arrow and label -->                            
             <Shape isPickable="false" DEF="AXIS_LINE_Y">
             	<IndexedLineSet index="0 1 -1">
-            	    <Coordinate point="0 0.001 0, 0 0.001 15" color="0 1 0, 0 1 0"></Coordinate>
+            	    <Coordinate point="0 0.001 0, 0 0.001 -15" color="0 1 0, 0 1 0"></Coordinate>
             	</IndexedLineSet>
 
             	<Appearance DEF='Green'>
