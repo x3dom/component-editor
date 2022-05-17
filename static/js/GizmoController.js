@@ -292,7 +292,7 @@ GizmoController.prototype.updateTransformationGizmo = function()
 
         //update gizmo handles' scale
         //TODO: here, we would need the _local_ box to compute the box volume, otherwise the volume changes on rotation
-        boxVolume = this._gizmoAffectedElement.getMatrixTransformNode()._x3domNode.getVolume();
+        //boxVolume = this._gizmoAffectedElement.getMatrixTransformNode()._x3domNode.getVolume();
         //boxVolume.transform(this._gizmoAffectedElement.getMatrixTransformNode()._x3domNode.getParentTransform());
 
         //scaleFactor = 0.1 * 1.2 * boxVolume.getDiameter();
